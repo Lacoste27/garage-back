@@ -1,5 +1,5 @@
-import { MongoClient } from 'mongodb';
-import { Parametre } from '../utils/parametre.js';
+var  {MongoClient} = require('mongodb');
+var {Parametre} = require('../utils/parametre.js');
 
 /**
  * Connection URI. Update <username>, <password>, and <your-cluster-url> to reflect your cluster.
@@ -28,7 +28,7 @@ async function main(){
 }
 
 async function listDatabases(client){
-    databasesList = await client.db().admin().listDatabases();
+    var databasesList = await client.db().admin().listDatabases();
  
     console.log("Databases:");
     databasesList.databases.forEach(db => console.log(` - ${db.name}`));

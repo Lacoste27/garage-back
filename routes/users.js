@@ -17,6 +17,8 @@ userRouter.post('/signup', function (req, res) {
     salt: ""
   };
 
+  console.log(req.body);
+
   matchUser.salt = crypto.randomBytes(16).toString('hex');
   matchUser.password = crypto.pbkdf2Sync(matchUser.password, matchUser.salt,
     1000, 64, `sha512`).toString(`hex`);
@@ -29,15 +31,15 @@ userRouter.post('/signup', function (req, res) {
       console.log('Added new users match');
       res.json(matchUser);
     }
-  })
+  });
 
 });
 
-function validPassword(user, mdp) {
-  var hash = crypto.pbkdf2Sync(mdp,
-    user.salt, 1000, 64, `sha512`).toString(`hex`);
+// function validPassword(user, mdp) {
+//   var hash = crypto.pbkdf2Sync(mdp,
+//     user.salt, 1000, 64, `sha512`).toString(`hex`);
 
-  return hash === user.password
-}
+//   return hash === user.password
+// }
 
 module.exports = userRouter;

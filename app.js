@@ -14,20 +14,7 @@ const { Parametre } = require('./utils/parametre')
 
 var app = express();
 
-// Connection
-const client = new MongoClient(Parametre.uri);
-(async () => {
-  await client.connect();
-})
-
-const addClientToRequest = (req, res, next) => {
-  req.client = client.db('garage');
-  next()
-};
-
 app.use(cors());
-app.use(addClientToRequest);
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 

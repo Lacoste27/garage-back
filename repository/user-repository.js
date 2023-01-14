@@ -25,7 +25,6 @@ async function signup(newuser) {
 
 async function getUser(email) {
   const connection = getDatabase();
-
   return connection.collection("client").findOne({ email: email });
 }
 

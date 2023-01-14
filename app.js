@@ -6,8 +6,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var indexRouter = require('./routes/index.routes');
+var usersRouter = require('./routes/users.routes');
 
 const { MongoClient } = require('mongodb');
 const { Parametre } = require('./utils/parametre')

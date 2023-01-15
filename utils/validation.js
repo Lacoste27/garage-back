@@ -12,7 +12,7 @@ function validateuserdata(email, nom, prenom, password) {
     prenom: "",
     password: "",
     email: "",
-    result : ""
+    result: ""
   };
 
   if (nom.length > 0) {
@@ -33,7 +33,7 @@ function validateuserdata(email, nom, prenom, password) {
     message.password = "";
     message.email = "";
     message.result = true;
-  } else {  
+  } else {
     message.nom = _nom ? "" : "votre nom est incorrect";
     message.prenom = _prenom ? "" : "Votre prenom est incorrect";
     message.password = _password
@@ -46,7 +46,37 @@ function validateuserdata(email, nom, prenom, password) {
   return message;
 }
 
+function validateVoiture(numero, marque, model) {
+  var _numero, _marque, _model;
+
+  var message = {
+    numero: "",
+    marque: "",
+    model: "",
+    result: false
+  };
+
+  if (numero.length > 0) {
+    _numero = true;
+  }
+  if (marque.length > 0) {
+    _marque = true;
+  }
+  if (model.length > 0) {
+    _model = true;
+  }
+
+  if (_numero && _marque && _model) {
+    message.result = true;
+  } else {
+    message.numero = _numero ? "" : "votre numero de voiture est incorrect";
+    message.marque = _marque ? "" : "votre marque de voiture est incorrect";
+    message.model = _model ? "" : "votre model de voiture est incorrect";
+  }
+  return message;
+}
 module.exports = {
   validateemail: validateemail,
   validateuserdata: validateuserdata,
+  validatevoituredata: validateVoiture
 };

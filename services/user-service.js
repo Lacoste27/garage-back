@@ -1,8 +1,8 @@
 const { error } = require("console");
-var { Signup, GetUser } = require("../repository/user-repository");
+var { Signup, GetUser, AddUserVoiture } = require("../repository/user-repository");
 const { HttpStatusCodes } = require("../utils/statuscode");
 const { GetSalt, GetHash, VerifyPassword } = require("../utils/utils");
-const { validateemail, validateuserdata } = require("../utils/validation");
+const { validateemail, validateuserdata, validatevoituredata } = require("../utils/validation");
 
 function signup(request, response) {
   const user = {
@@ -75,7 +75,65 @@ function login(request, response) {
     });
 }
 
+function getVoituresUser(request, response) {
+  // const email = request.email;
+  const email = "tsiory@email.com";
+
+  // if user is authenticated
+  if (email != null) {
+    const user = GetUser(email);
+    user.then((result) => {
+      const utilisateur = result;
+      if (utilisateur != null) {
+        return response.status(HttpStatusCodes.ACCEPTED).json({ voitures: utilisateur.voitures })
+      } else {
+        return response.status(HttpStatusCodes.EXPECTATION_FAILED).json("Utilisateur non trouvée");
+      }
+
+    }).catch((error) => {
+      return response.status(HttpStatusCodes.EXPECTATION_FAILED).json("error");
+    })
+  } else {
+    return response.status(HttpStatusCodes.UNAUTHORIZED).json("Pas d'utilisateur connectée");
+  }
+};
+
+function addVoitureUser(request, response) {
+  const email = "yroist@email.com";
+
+  const voiture = {
+    numero: request.body.numero,
+    marque: request.body.marque,
+    model: request.body.model
+  };
+
+  const message = validatevoituredata(voiture.numero, voiture.marque, voiture.model);
+
+  // if user is authenticated
+  if (email != null) {
+    if (message.result) {
+      const insert = AddUserVoiture(voiture, email);
+
+      insert.then((result) => {
+        return response
+          .status(HttpStatusCodes.ACCEPTED)
+          .json({ data: {}, message: "Nouvel voiture ajouté" });
+      }).catch((error) => {
+        return response.status(HttpStatusCodes.NOT_ACCEPTABLE).json(error);
+      });
+    } else {
+      return response
+        .status(HttpStatusCodes.BAD_REQUEST)
+        .json({ data: {}, message });
+    }
+  } else {
+    return response.status(HttpStatusCodes.UNAUTHORIZED).json("Pas d'utilisateur connectée");
+  }
+}
+
 module.exports = {
   signup: signup,
   login: login,
+  getVoituresUser: getVoituresUser,
+  addVoitureUser: addVoitureUser
 };

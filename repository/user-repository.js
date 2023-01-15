@@ -8,11 +8,11 @@ async function signup(newuser) {
     email: newuser.email,
     password: newuser.password,
     salt: newuser.salt,
-    voitures :[]
+    voitures: []
   };
 
   const connection = getDatabase();
-  
+
   connection
     .collection("client")
     .insertOne(user)
@@ -29,7 +29,24 @@ async function getUser(email) {
   return connection.collection("client").findOne({ email: email });
 }
 
+async function addVoitureToUser(newvoiture, emailUser) {
+  const voiture = {
+    numero: newvoiture.numero,
+    marque: newvoiture.marque,
+    model: newvoiture.model
+  }
+
+  const connection = getDatabase();
+
+  connection.collection("client").updateOne({ email: emailUser }, { $push: { voitures: newvoiture } }).then((result) => {
+    return result;
+  }).catch((error) => {
+    return error;
+  })
+}
+
 module.exports = {
   Signup: signup,
   GetUser: getUser,
+  AddUserVoiture: addVoitureToUser,
 };

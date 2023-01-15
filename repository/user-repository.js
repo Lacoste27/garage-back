@@ -8,6 +8,7 @@ async function signup(newuser) {
     email: newuser.email,
     password: newuser.password,
     salt: newuser.salt,
+    voitures :[]
   };
 
   const connection = getDatabase();

@@ -4,11 +4,9 @@
 
 ## Clients
     - clients(signup): https://m1P10mean-tsiory-tommy.web.app/v0/signup
-    - clients(depot voitures): https://m1P10mean-tsiory-tommy.web.app/v0/client/depot
+    - clients(depot voiture): https://m1P10mean-tsiory-tommy.web.app/v0/client/:voiture/depot
     - clients(liste des voitures du client): https://m1P10mean-tsiory-tommy.web.app/v0/client/voitures
-    - clients(détails réparation voitures): https://m1P10mean-tsiory-tommy.web.app/v0//client/:voiture/reparation
-    - clients(etat paiement de facture): https://m1P10mean-tsiory-tommy.web.app/v0/client/:reparation/facture
-    - clients(etat paiement de facture): https://m1P10mean-tsiory-tommy.web.app/v0/client/:reparation/facture
+    - clients(détails réparation voitures): https://m1P10mean-tsiory-tommy.web.app/v0//client/:reparation/detail
     - clients(etat paiement de facture): https://m1P10mean-tsiory-tommy.web.app/v0/client/:reparation/facture
 
 ## Atelier

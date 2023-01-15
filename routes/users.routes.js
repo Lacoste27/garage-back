@@ -1,7 +1,7 @@
 var express = require('express');
 var userRouter = express.Router();
 var crypto = require('crypto');
-const { signup, login, getVoituresUser, addVoitureUser } = require('../services/user-service');
+const { signup, login, getVoituresUser, addVoitureUser, deposerVoiture, alluserreparation } = require('../services/user-service');
 
 
 /* GET users listing. */
@@ -16,5 +16,9 @@ userRouter.post('/login', login);
 userRouter.get('/voitures', getVoituresUser);
 // Ajouter une voiture pour l'utilisateur connecté
 userRouter.post('/voitures', addVoitureUser);
+// Deposer une voiture au garage
+userRouter.get('/:voiture/depot', deposerVoiture);
+// Liste des reparations de l'utilisateur
+userRouter.get('/reparations', alluserreparation);
 
 module.exports = userRouter;

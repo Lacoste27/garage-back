@@ -1,6 +1,5 @@
 const { error } = require("console");
-var { Signup, GetUser, AddUserVoiture } = require("../repository/user-repository");
-const { HttpStatusCodes } = require("../utils/statuscode");
+var { Signup, GetUser, AddUserVoiture, DeposerVoiture, AllUserReparations } = require("../repository/user-repository");
 const { GetSalt, GetHash, VerifyPassword } = require("../utils/utils");
 const { validateemail, validateuserdata, validatevoituredata } = require("../utils/validation");
 
@@ -91,6 +90,7 @@ function getVoituresUser(request, response) {
       }
 
     }).catch((error) => {
+      console.log(error);
       return response.status(HttpStatusCodes.EXPECTATION_FAILED).json("error");
     })
   } else {
@@ -131,9 +131,66 @@ function addVoitureUser(request, response) {
   }
 }
 
+function deposerVoitureUser(request, response) {
+  const email = "yroist@email.com";
+
+  const numeroVoiture = request.params.voiture;
+
+  const user = GetUser(email);
+
+  var voiture = null;
+
+  user.then((result) => {
+    result.voitures.forEach(element => {
+      if (element.numero == numeroVoiture) {
+        console.log(element);
+        voiture = element;
+      }
+    });
+
+    if (voiture != null) {
+      const deposerVoiture = DeposerVoiture(voiture, { id: result._id, nom: result.nom, prenom: result.prenom, email: result.email });
+      deposerVoiture.then((value) => {
+        return response
+          .status(HttpStatusCodes.ACCEPTED)
+          .json({ data: {}, message: "Nouveau reparation ajouté" });
+      }).catch((error) => {
+        console.log(error)
+        return response.status(HttpStatusCodes.NOT_ACCEPTABLE).json(error);
+      })
+    } else {
+      return response
+        .status(HttpStatusCodes.BAD_REQUEST)
+        .json({ data: {}, message: "La voiture n'appartient pas à l'utilisateur ou n'existe pas" });
+    }
+
+  }).catch((error) => {
+    console.log(error)
+    return response.status(HttpStatusCodes.NOT_ACCEPTABLE).json(error);
+  });
+}
+
+function getAllReparation(request, response) {
+  const email = "yroist@email.com";
+
+  const reparations = AllUserReparations(email);
+  reparations.then((result) => {
+    const reps = result;
+    if (reps != null) {
+      return response.status(HttpStatusCodes.ACCEPTED).json({ reparations: reps });
+    }
+  }).catch((error) => {
+    console.log(error);
+    return response.status(HttpStatusCodes.EXPECTATION_FAILED).json("Reparations non trouvée");
+  })
+}
+
+
 module.exports = {
   signup: signup,
   login: login,
   getVoituresUser: getVoituresUser,
-  addVoitureUser: addVoitureUser
+  addVoitureUser: addVoitureUser,
+  deposerVoiture: deposerVoitureUser,
+  alluserreparation: getAllReparation
 };

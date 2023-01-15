@@ -38,15 +38,53 @@ async function addVoitureToUser(newvoiture, emailUser) {
 
   const connection = getDatabase();
 
-  connection.collection("client").updateOne({ email: emailUser }, { $push: { voitures: newvoiture } }).then((result) => {
+  connection.collection("client").updateOne({ email: emailUser }, { $push: { voitures: voiture } }).then((result) => {
     return result;
   }).catch((error) => {
     return error;
   })
 }
 
+async function deposerVoiture(voiture, client) {
+
+  const reparation = {
+    date_depot: new Date(),
+    date_sortie: null,
+    paiement: {
+
+    },
+    client: {
+      id: client.id,
+      nom: client.nom,
+      prenom: client.prenom,
+      email: client.email
+    },
+    voiture: voiture,
+    reparateur: {
+
+    },
+    reparation_faire: [],
+    status: "Deposer"
+  }
+
+  const connection = getDatabase();
+
+  connection.collection("reparation").insertOne(reparation).then((result) => {
+    return result;
+  }).catch((error) => {
+    return error;
+  })
+}
+
+async function getreparationsuser(email) {
+  const connection = getDatabase();
+  return connection.collection("reparation").find({ "client.email": email }).toArray();
+}
+
 module.exports = {
   Signup: signup,
   GetUser: getUser,
   AddUserVoiture: addVoitureToUser,
+  DeposerVoiture: deposerVoiture,
+  AllUserReparations: getreparationsuser
 };

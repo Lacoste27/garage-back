@@ -1,5 +1,6 @@
 const { error } = require("console");
 var { Signup, GetUser, AddUserVoiture, DeposerVoiture, AllUserReparations } = require("../repository/user-repository");
+const { HttpStatusCodes } = require("../utils/statuscode");
 const { GetSalt, GetHash, VerifyPassword } = require("../utils/utils");
 const { validateemail, validateuserdata, validatevoituredata } = require("../utils/validation");
 

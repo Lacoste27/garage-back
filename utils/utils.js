@@ -18,8 +18,22 @@ function VerifyPassword(user, password) {
     return user_hash == user.password;
 }
 
+const REPARATIONETATS = {  
+    deposer: "Deposer",
+    encours: "En cours de réparation",
+    fini: "Sortie"
+}
+
+const VOITUREREPARATIONETATS= {  
+    encours : "En cours",
+    fini:"Finis"
+}
+
 module.exports = {
     GetHash: GetHash,
     GetSalt: GetSalt,
-    VerifyPassword: VerifyPassword
+    VerifyPassword: VerifyPassword,
+    REPARATIONETAT: REPARATIONETATS,
+    VOITUREREPARATIONETAT: VOITUREREPARATIONETATS
+
 }

@@ -1,6 +1,5 @@
 var express = require('express');
 var userRouter = express.Router();
-var crypto = require('crypto');
 const { signup, login, getVoituresUser, addVoitureUser, deposerVoiture, alluserreparation } = require('../services/user-service');
 
 

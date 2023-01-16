@@ -1,4 +1,6 @@
+const { ObjectId } = require("mongodb");
 const { getDatabase } = require("../models/connect");
+const { REPARATIONETAT } = require("../utils/utils");
 
 async function addResponsable(responsable) {
   const financier = {
@@ -33,8 +35,9 @@ async function receptionVoiture(reparation_id, reparateur) {
 
   connection
     .collection("reparation")
-    .updateOne({ _id: reparation_id }, { $set: { reparateur: reparateur } })
+    .updateOne({ _id: ObjectId(reparation_id) }, { $set: { reparateur: reparateur,status: REPARATIONETAT.encours } })
     .then((result) => {
+        console.log(result);
       return result;
     })
     .catch((error) => {

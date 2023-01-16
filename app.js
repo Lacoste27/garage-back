@@ -9,9 +9,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index.routes');
 var usersRouter = require('./routes/users.routes');
 var reparationsRouter = require('./routes/reparations.routes');
-
-const { MongoClient } = require('mongodb');
-const { Parametre } = require('./utils/parametre')
+const responsableRouter = require('./routes/responsable.routes');
 
 var app = express();
 
@@ -28,6 +26,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/reparations', reparationsRouter);
+app.use('/responsables',responsableRouter)
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

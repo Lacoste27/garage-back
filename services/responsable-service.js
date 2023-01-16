@@ -1,4 +1,6 @@
 const { ObjectId } = require("mongodb");
+const { response } = require("../app");
+const { GetAllReparation } = require("../repository/reparation-repository");
 const {
   getResponsable,
   addResponsable,
@@ -57,16 +59,19 @@ function ReceptionVoiture(request, response) {
   const reparation_id = body.data.reparation_id;
 
   const reception = receptionVoiture(reparation_id, reparateur);
-  reception.then(() => {
-    response
+  reception
+    .then(() => {
+      response
         .status(HttpStatusCodes.ACCEPTED)
         .json({ data: { message: "Voiture recues" } });
-  }).catch((error) => {
-    response
+    })
+    .catch((error) => {
+      response
         .status(HttpStatusCodes.CONFLICT)
-        .json({ data: { message: error} });
-  });
+        .json({ data: { message: error } });
+    });
 }
+
 
 module.exports = {
   newResponsable: newResponsable,

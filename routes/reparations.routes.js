@@ -1,7 +1,9 @@
 var express = require('express');
 var reparationRouter = express.Router();
-const { reparationDetail, addReparationVoiture, changeVoitureReparationEtat } = require('../services/reparation-service');
+const { reparationDetail, addReparationVoiture, changeVoitureReparationEtat, getAllReparations } = require('../services/reparation-service');
 
+// receuperer tous les réparations
+reparationRouter.get('/', getAllReparations);
 // Detail d'une reparation
 reparationRouter.get('/:idreparation/detail', reparationDetail);
 

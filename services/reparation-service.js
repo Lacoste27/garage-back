@@ -3,6 +3,7 @@ var {
   DetailReparation,
   AddVoitureReparation,
   ChangeVoitureReparationEtat,
+  GetAllReparation,
 } = require("../repository/reparation-repository");
 const { HttpStatusCodes } = require("../utils/statuscode");
 const { REPARATIONETAT, VOITUREREPARATIONETAT } = require("../utils/utils");
@@ -45,12 +46,12 @@ function addReparationVoiture(request, response) {
     .then(() => {
       response
         .status(HttpStatusCodes.CREATED)
-        .json({ data: { message: "Réparations voiture ajoutés" } });
+        .json({ data: {}, message: "Réparations voiture ajoutés" });
     })
     .catch((error) => {
       response
         .status(HttpStatusCodes.CONFLICT)
-        .json({ data: { message: error } });
+        .json({ data: {}, message: error });
     });
 }
 
@@ -79,8 +80,23 @@ function changeVoitureReparationState(request, response) {
     });
 }
 
+function GetAllReparations(request, response) {
+  const allReparations = GetAllReparation();
+
+  allReparations
+    .then((reparartions) => {
+      response.status(HttpStatusCodes.ACCEPTED).json({ data: { reparartions } });
+    })
+    .catch((error) => {
+      response
+        .status(HttpStatusCodes.BAD_REQUEST)
+        .json({ data: {}, message: error });
+    });
+}
+
 module.exports = {
   reparationDetail: detailReparation,
   addReparationVoiture: addReparationVoiture,
   changeVoitureReparationEtat: changeVoitureReparationState,
+  getAllReparations: GetAllReparations,
 };

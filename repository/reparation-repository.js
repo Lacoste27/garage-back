@@ -8,6 +8,11 @@ async function getDetailReparation(idreparation) {
     .findOne({ _id: ObjectId(idreparation) });
 }
 
+async function getAllReparation() {
+  const connection = getDatabase();
+  return connection.collection("reparation").find({}).toArray();
+}
+
 async function addVoitureReparation(reparation_id, reparations) {
   const connection = getDatabase();
   connection
@@ -17,7 +22,6 @@ async function addVoitureReparation(reparation_id, reparations) {
       { $push: { reparation_faire: reparations } }
     )
     .then((result) => {
-      console.log(result);
       return result;
     })
     .catch((error) => {
@@ -25,21 +29,32 @@ async function addVoitureReparation(reparation_id, reparations) {
     });
 }
 
-async function changeVoitureReparationEtat(repartion_id,reparation_details_id, etat) {
+async function changeVoitureReparationEtat(
+  repartion_id,
+  reparation_details_id,
+  etat
+) {
   const connection = getDatabase();
 
   connection
-  .collection("reparation")
-  .updateOne({ _id: ObjectId(repartion_id), "reparation_faire._id":ObjectId(reparation_details_id) }    , { $set: { "reparation_faire.$.etat": etat } })
-  .then((result) => {
-    return result;
-  })
-  .catch((error) => {
-    return error;
-  });
+    .collection("reparation")
+    .updateOne(
+      {
+        _id: ObjectId(repartion_id),
+        "reparation_faire._id": ObjectId(reparation_details_id),
+      },
+      { $set: { "reparation_faire.$.etat": etat } }
+    )
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => {
+      return error;
+    });
 }
 
 module.exports = {
+  GetAllReparation: getAllReparation,
   DetailReparation: getDetailReparation,
   AddVoitureReparation: addVoitureReparation,
   ChangeVoitureReparationEtat: changeVoitureReparationEtat,

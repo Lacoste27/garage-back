@@ -37,12 +37,20 @@ const VOITUREREPARATIONETATS= {
     fini:"Finis"
 }
 
+const TotalPaiement = function(reparation_faire){  
+    const sum = reparation_faire.reduce((somme, reparation) => {  
+        return somme+reparation.prix;
+    },0)
+    return sum;
+}
+
 module.exports = {
     GetHash: GetHash,
     GetSalt: GetSalt,
     VerifyPassword: VerifyPassword,
     REPARATIONETAT: REPARATIONETATS,
     VOITUREREPARATIONETAT: VOITUREREPARATIONETATS,
-    MODEPAIEMENT:MODEPAIEMENT
+    MODEPAIEMENT:MODEPAIEMENT,
+    TotalPaiement: TotalPaiement
 
 }

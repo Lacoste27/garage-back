@@ -6,7 +6,7 @@ var {
   GetAllReparation,
 } = require("../repository/reparation-repository");
 const { HttpStatusCodes } = require("../utils/statuscode");
-const { REPARATIONETAT, VOITUREREPARATIONETAT } = require("../utils/utils");
+const { REPARATIONETAT, VOITUREREPARATIONETAT, TotalPaiement } = require("../utils/utils");
 
 function detailReparation(request, response) {
   const idreparation = request.params.idreparation;
@@ -19,12 +19,14 @@ function detailReparation(request, response) {
       if (rep != null) {
         return response
           .status(HttpStatusCodes.ACCEPTED)
-          .json({ data: rep ,message:"",success: true, error:false});
+          .json({ data: rep, message: "", success: true, error: false });
       }
     })
     .catch((error) => {
       console.log(error);
-      return response.status(HttpStatusCodes.EXPECTATION_FAILED).json({data:{},message:error,success: false,error:true});
+      return response
+        .status(HttpStatusCodes.EXPECTATION_FAILED)
+        .json({ data: {}, message: error, success: false, error: true });
     });
 }
 
@@ -44,14 +46,44 @@ function addReparationVoiture(request, response) {
 
   add
     .then(() => {
-      response
-        .status(HttpStatusCodes.CREATED)
-        .json({ data: {},  message: "Réparations voiture ajoutés" ,success: true,error:false});
+      response.status(HttpStatusCodes.CREATED).json({
+        data: {},
+        message: "Réparations voiture ajoutés",
+        success: true,
+        error: false,
+      });
     })
     .catch((error) => {
       response
         .status(HttpStatusCodes.CONFLICT)
-        .json({ data: {}, message: error ,success: false,error:true });
+        .json({ data: {}, message: error, success: false, error: true });
+    });
+}
+
+function totalReparation(request, response) {
+  const reparation_id = request.params.reparation_id;
+
+  const reparation_faire = DetailReparation(reparation_id);
+
+  console.log(reparation_faire)
+  reparation_faire
+    .then((result) => {
+      const total = {  
+        _id: reparation_id,
+        total: TotalPaiement(result.reparation_faire)
+      }
+
+      return response.status(HttpStatusCodes.ACCEPTED).json({
+        data: total,
+        message: "",
+        success: true,
+        error: false,
+      });
+    })
+    .catch((error) => {
+      return response
+        .status(HttpStatusCodes.EXPECTATION_FAILED)
+        .json({ data: {}, message: error, success: false, error: true });
     });
 }
 
@@ -69,14 +101,17 @@ function changeVoitureReparationState(request, response) {
   );
   change
     .then(() => {
-      response
-        .status(HttpStatusCodes.CREATED)
-        .json({ data: {}, message: "Etat changé !" ,success: true,error:false });
+      response.status(HttpStatusCodes.CREATED).json({
+        data: {},
+        message: "Etat changé !",
+        success: true,
+        error: false,
+      });
     })
     .catch((error) => {
       response
         .status(HttpStatusCodes.CONFLICT)
-        .json({ data: {}, message: error ,success: false,error:true });
+        .json({ data: {}, message: error, success: false, error: true });
     });
 }
 
@@ -85,7 +120,9 @@ function GetAllReparations(request, response) {
 
   allReparations
     .then((reparartions) => {
-      response.status(HttpStatusCodes.ACCEPTED).json({ data: { reparartions } });
+      response
+        .status(HttpStatusCodes.ACCEPTED)
+        .json({ data: { reparartions } });
     })
     .catch((error) => {
       response
@@ -99,4 +136,5 @@ module.exports = {
   addReparationVoiture: addReparationVoiture,
   changeVoitureReparationEtat: changeVoitureReparationState,
   getAllReparations: GetAllReparations,
+  totalReparation: totalReparation,
 };

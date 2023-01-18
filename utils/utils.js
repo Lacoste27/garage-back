@@ -18,6 +18,14 @@ function VerifyPassword(user, password) {
     return user_hash == user.password;
 }
 
+const MODEPAIEMENT = {  
+    Mvola: "Mvola",
+    OrangeMoney:"OrangeMoney",
+    AirtelMoney: "AirtelMony",
+    Visa :"Visa",
+    Espece: "Espece"
+}
+
 const REPARATIONETATS = {  
     deposer: "Deposer",
     encours: "En cours de réparation",
@@ -34,6 +42,7 @@ module.exports = {
     GetSalt: GetSalt,
     VerifyPassword: VerifyPassword,
     REPARATIONETAT: REPARATIONETATS,
-    VOITUREREPARATIONETAT: VOITUREREPARATIONETATS
+    VOITUREREPARATIONETAT: VOITUREREPARATIONETATS,
+    MODEPAIEMENT:MODEPAIEMENT
 
 }

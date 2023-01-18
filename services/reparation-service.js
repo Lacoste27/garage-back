@@ -3,6 +3,7 @@ var {
   DetailReparation,
   AddVoitureReparation,
   ChangeVoitureReparationEtat,
+  GetAllReparation,
 } = require("../repository/reparation-repository");
 const { HttpStatusCodes } = require("../utils/statuscode");
 const { REPARATIONETAT, VOITUREREPARATIONETAT } = require("../utils/utils");
@@ -79,8 +80,23 @@ function changeVoitureReparationState(request, response) {
     });
 }
 
+function GetAllReparations(request, response) {
+  const allReparations = GetAllReparation();
+
+  allReparations
+    .then((reparartions) => {
+      response.status(HttpStatusCodes.ACCEPTED).json({ data: { reparartions } });
+    })
+    .catch((error) => {
+      response
+        .status(HttpStatusCodes.BAD_REQUEST)
+        .json({ data: {}, message: error });
+    });
+}
+
 module.exports = {
   reparationDetail: detailReparation,
   addReparationVoiture: addReparationVoiture,
   changeVoitureReparationEtat: changeVoitureReparationState,
+  getAllReparations: GetAllReparations,
 };

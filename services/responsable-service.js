@@ -3,6 +3,7 @@ const {
   getResponsable,
   addResponsable,
   receptionVoiture,
+  validationPaiement,
 } = require("../repository/responsable-repository");
 const { HttpStatusCodes } = require("../utils/statuscode");
 const { GetSalt, GetHash } = require("../utils/utils");
@@ -29,17 +30,17 @@ function newResponsable(request, response) {
     if (result != null) {
       return response
         .status(HttpStatusCodes.CONFLICT)
-        .json({ data: { message: "L'email saisi est déjà utilisé!" } });
+        .json({ data: {}, message: "L'email saisi est déjà utilisé!" , success: false, error: true });
     } else {
       const add = addResponsable(responsable);
       add
         .then(() => {
           return response
             .status(HttpStatusCodes.ACCEPTED)
-            .json({ data: {}, message: "Nouveau responsable ajouter !" });
+            .json({ data: {}, message: "Nouveau responsable ajouter !", success: true, error: false });
         })
         .catch((error) => {
-          return response.status(HttpStatusCodes.NOT_ACCEPTABLE).json(error);
+          return response.status(HttpStatusCodes.NOT_ACCEPTABLE).json({data:{},message:error, success: false, error: true});
         });
     }
   });
@@ -57,18 +58,41 @@ function ReceptionVoiture(request, response) {
   const reparation_id = body.data.reparation_id;
 
   const reception = receptionVoiture(reparation_id, reparateur);
-  reception.then(() => {
-    response
+  reception
+    .then(() => {
+      response
         .status(HttpStatusCodes.ACCEPTED)
-        .json({ data: { message: "Voiture recues" } });
-  }).catch((error) => {
-    response
+        .json({ data: {}, message: "Voiture recues" , success: true, error: false});
+    })
+    .catch((error) => {
+      response
         .status(HttpStatusCodes.CONFLICT)
-        .json({ data: { message: error} });
+        .json({ data: {}, message: error , success: false, error: true });
+    });
+}
+
+function ValiderPaiement(request, response) {
+  const body = request.body;
+
+  const valideur = body.data.valideur;
+  const paiement_id = ObjectId(body.data.paiement_id);
+
+  const valider = validationPaiement(valideur,paiement_id);
+
+  valider.then(() => {
+    response
+      .status(HttpStatusCodes.ACCEPTED)
+      .json({ data: {}, message: "Paiement validé !" , success: true, error: false});
+  })
+  .catch((error) => {
+    response
+      .status(HttpStatusCodes.CONFLICT)
+      .json({ data: {}, message: error , success: false, error: true });
   });
 }
 
 module.exports = {
   newResponsable: newResponsable,
-  receptionVoiture: ReceptionVoiture
+  receptionVoiture: ReceptionVoiture,
+  validationPaiement: ValiderPaiement,
 };

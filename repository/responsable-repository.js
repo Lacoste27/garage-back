@@ -30,14 +30,37 @@ async function getResponsable(email) {
   return connection.collection("responsable").findOne({ email: email });
 }
 
+// Responssable atelier
 async function receptionVoiture(reparation_id, reparateur) {
   const connection = getDatabase();
 
   connection
     .collection("reparation")
-    .updateOne({ _id: ObjectId(reparation_id) }, { $set: { reparateur: reparateur,status: REPARATIONETAT.encours } })
+    .updateOne(
+      { _id: ObjectId(reparation_id) },
+      { $set: { reparateur: reparateur, status: REPARATIONETAT.encours } }
+    )
     .then((result) => {
-        console.log(result);
+      console.log(result);
+      return result;
+    })
+    .catch((error) => {
+      return error;
+    });
+}
+
+// Responsable financier
+async function validerPaiement(valideur, paiement_id) {
+  const connection = getDatabase();
+
+  connection
+    .collection("reparation")
+    .updateOne(
+      { "paiement._id": ObjectId(paiement_id) },
+      { $set: { "paiement.valideur": valideur, "paiement.valid": 1 } }
+    )
+    .then((result) => {
+      console.log(result);
       return result;
     })
     .catch((error) => {
@@ -49,4 +72,5 @@ module.exports = {
   addResponsable: addResponsable,
   getResponsable: getResponsable,
   receptionVoiture: receptionVoiture,
+  validationPaiement: validerPaiement,
 };

@@ -2,6 +2,8 @@
  * Get a hash from the password.
  */
 var crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+var { SECRET_TOKEN } = require("../utils/parametre");
 
 function GetSalt() {
     return crypto.randomBytes(16).toString('hex');
@@ -27,7 +29,7 @@ function generateAccessToken(user) {
       role: user.role
     };
 
-    console.log(payload);
+    console.log(jwt.sign(payload, SECRET_TOKEN, { expiresIn: '1800s' }));
   
     return jwt.sign(payload, SECRET_TOKEN, { expiresIn: '1800s' })
   }
@@ -57,7 +59,7 @@ module.exports = {
     GetHash: GetHash,
     GetSalt: GetSalt,
     VerifyPassword: VerifyPassword,
-    GenerateAccessToken: generateAccessToken
+    GenerateAccessToken: generateAccessToken,
     REPARATIONETAT: REPARATIONETATS,
     VOITUREREPARATIONETAT: VOITUREREPARATIONETATS,
     MODEPAIEMENT:MODEPAIEMENT

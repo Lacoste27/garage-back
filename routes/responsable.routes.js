@@ -1,9 +1,6 @@
-
-module.exports = responsableRouter
-
-const { newResponsable, receptionVoiture, validationPaiement } = require('../services/responsable-service');
+var express = require("express");
 const jwt = require('jsonwebtoken');
-const { login } = require('../services/responsable-service');
+const { login, newResponsable, receptionVoiture, validationPaiement } = require('../services/responsable-service');
 const { authenticateToken } = require('../middleware/client-middleware');
 const { authenticateAtelierToken } = require('../middleware/atelier-middleware');
 const { authenticateFinancierToken } = require('../middleware/financier-middleware');

@@ -3,11 +3,8 @@ const { error } = require("console");
 const { GetSalt, GetHash, VerifyPassword, GenerateAccessToken } = require("../utils/utils");
 const { ObjectId } = require("mongodb");
 var { Signup, GetUser, AddUserVoiture, DeposerVoiture, AllUserReparations,PaiementReparation } = require("../repository/user-repository");
-const { HttpStatusCodes } = require("../utils/statuscode");
 const { validateemail, validateuserdata, validatevoituredata } = require("../utils/validation");
 const { HttpStatusCodes } = require("../utils/statuscode");
-var { SECRET_TOKEN } = require("../utils/parametre");
-const jwt = require('jsonwebtoken');
 
 
 function paiement(request, response){  
@@ -67,12 +64,13 @@ function signup(request, response) {
 
         insert
           .then(() => {
+            const token = GenerateAccessToken(user);
             return response
               .status(HttpStatusCodes.ACCEPTED)
-              .json({ data: {}, message: "Nouveau client ajouter !",success: false,error:true });
+              .json({ data: {token}, message: "Nouveau client ajouter !",success: true,error:false });
           })
           .catch((error) => {
-            return response.status(HttpStatusCodes.NOT_ACCEPTABLE).json(error);
+            return response.status(HttpStatusCodes.NOT_ACCEPTABLE).json({data:{},message: error,success: false,error:true});
           });
       } else {
         return response
@@ -103,7 +101,6 @@ function login(request, response) {
             }, message: "Vous êtes authentifié",
             success: true,error:false 
           });
-          .json({ data: {}, message: "Vous êtes authentifié"});
       } else {
         return response
           .status(HttpStatusCodes.UNAUTHORIZED)

@@ -27,7 +27,9 @@ function authenticateAtelierToken(req, res, next) {
         });
 
         // S'il ne possède pas un rôle "atelier"
-        res.status(HttpStatusCodes.UNAUTHORIZED).json({ data: {}, message: "Vous n'avez pas accès à cette fonctionnalité" });
+        if (!isAtelier) {
+            res.status(HttpStatusCodes.UNAUTHORIZED).json({ data: {}, message: "Vous n'avez pas accès à cette fonctionnalité" });
+        }
 
         // S'il possède un rôle "atelier"
         req.user = user;

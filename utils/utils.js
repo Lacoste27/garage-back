@@ -18,6 +18,21 @@ function VerifyPassword(user, password) {
     return user_hash == user.password;
 }
 
+
+function generateAccessToken(user) {
+    const payload = {
+      nom: user.nom,
+      prenom: user.prenom,
+      email: user.email,
+      role: user.role
+    };
+
+    console.log(payload);
+  
+    return jwt.sign(payload, SECRET_TOKEN, { expiresIn: '1800s' })
+  }
+
+
 const MODEPAIEMENT = {  
     Mvola: "Mvola",
     OrangeMoney:"OrangeMoney",
@@ -37,12 +52,13 @@ const VOITUREREPARATIONETATS= {
     fini:"Finis"
 }
 
+
 module.exports = {
     GetHash: GetHash,
     GetSalt: GetSalt,
     VerifyPassword: VerifyPassword,
+    GenerateAccessToken: generateAccessToken
     REPARATIONETAT: REPARATIONETATS,
     VOITUREREPARATIONETAT: VOITUREREPARATIONETATS,
     MODEPAIEMENT:MODEPAIEMENT
-
 }

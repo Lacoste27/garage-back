@@ -1,5 +1,9 @@
 var express = require("express");
 var userRouter = express.Router();
+var crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const { signup, login, getVoituresUser, addVoitureUser, deposerVoiture, alluserreparation } = require('../services/user-service');
+
 const {
   signup,
   login,
@@ -9,6 +13,9 @@ const {
   alluserreparation,
   paiementReparation,
 } = require("../services/user-service");
+const { authenticateToken } = require('../middleware/client-middleware');
+const { authenticateAtelierToken } = require('../middleware/atelier-middleware');
+const { authenticateFinancierToken } = require('../middleware/financier-middleware'
 
 /* GET users listing. */
 userRouter.get("/", function (req, res, next) {
@@ -17,9 +24,18 @@ userRouter.get("/", function (req, res, next) {
 // Inscription
 userRouter.post("/signup", signup);
 // Connection
+
+
+//Utilisation Authentification
+// userRouter.use(authenticateToken);
+
+// Liste des voitures de l'utilisateur connecté
+userRouter.get('/voitures', authenticateToken, getVoituresUser);
+
 userRouter.post("/login", login);
 // Liste des voitures de l'utilisateur connecté
 userRouter.get("/voitures", getVoituresUser);
+
 // Ajouter une voiture pour l'utilisateur connecté
 userRouter.post("/voitures", addVoitureUser);
 // Deposer une voiture au garage

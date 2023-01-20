@@ -1,5 +1,14 @@
+
+const { error } = require("console");
+
+const { GetSalt, GetHash, VerifyPassword, GenerateAccessToken } = require("../utils/utils");
+const { validateemail, validateuserdata, validatevoituredata } = require("../utils/validation");
+const { HttpStatusCodes } = require("../utils/statuscode");
+var { SECRET_TOKEN } = require("../utils/parametre");
+const jwt = require('jsonwebtoken');
+
+
 const { ObjectId } = require("mongodb");
-const { response } = require("../app");
 const { GetAllReparation } = require("../repository/reparation-repository");
 const {
   getResponsable,
@@ -7,8 +16,37 @@ const {
   receptionVoiture,
   validationPaiement,
 } = require("../repository/responsable-repository");
-const { HttpStatusCodes } = require("../utils/statuscode");
-const { GetSalt, GetHash } = require("../utils/utils");
+
+
+
+function login(request, response) {
+    const email = request.body.email;
+    const password = request.body.password;
+
+    const user = getResponsable(email);
+    user
+        .then((result) => {
+            const user = result;
+            if (VerifyPassword(user, password)) {
+                const token = GenerateAccessToken(user);
+                return response
+                    .status(HttpStatusCodes.ACCEPTED)
+                    .json({
+                        data: {
+                            token: token
+                        }, message: "Vous êtes authentifié en tant que responsable"
+                    });
+            } else {
+                return response
+                    .status(HttpStatusCodes.UNAUTHORIZED)
+                    .json({ data: {}, message: "Votre mot de passe est incorrect" });
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            return response.status(HttpStatusCodes.EXPECTATION_FAILED).json(error);
+        });
+
 
 function newResponsable(request, response) {
   const data = request.body;
@@ -95,7 +133,9 @@ function ValiderPaiement(request, response) {
 
 
 module.exports = {
+  login: login,
   newResponsable: newResponsable,
   receptionVoiture: ReceptionVoiture,
   validationPaiement: ValiderPaiement,
 };
+

@@ -32,9 +32,33 @@ function generateAccessToken(user) {
     return jwt.sign(payload, SECRET_TOKEN, { expiresIn: '1800s' })
   }
 
+
+const MODEPAIEMENT = {  
+    Mvola: "Mvola",
+    OrangeMoney:"OrangeMoney",
+    AirtelMoney: "AirtelMony",
+    Visa :"Visa",
+    Espece: "Espece"
+}
+
+const REPARATIONETATS = {  
+    deposer: "Deposer",
+    encours: "En cours de réparation",
+    fini: "Sortie"
+}
+
+const VOITUREREPARATIONETATS= {  
+    encours : "En cours",
+    fini:"Finis"
+}
+
+
 module.exports = {
     GetHash: GetHash,
     GetSalt: GetSalt,
     VerifyPassword: VerifyPassword,
     GenerateAccessToken: generateAccessToken
+    REPARATIONETAT: REPARATIONETATS,
+    VOITUREREPARATIONETAT: VOITUREREPARATIONETATS,
+    MODEPAIEMENT:MODEPAIEMENT
 }

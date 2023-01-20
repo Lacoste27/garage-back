@@ -8,7 +8,7 @@ async function signup(newuser) {
     email: newuser.email,
     password: newuser.password,
     salt: newuser.salt,
-    voitures: []
+    voitures: [],
   };
 
   const connection = getDatabase();
@@ -33,52 +33,72 @@ async function addVoitureToUser(newvoiture, emailUser) {
   const voiture = {
     numero: newvoiture.numero,
     marque: newvoiture.marque,
-    model: newvoiture.model
-  }
+    model: newvoiture.model,
+  };
 
   const connection = getDatabase();
 
-  connection.collection("client").updateOne({ email: emailUser }, { $push: { voitures: voiture } }).then((result) => {
-    return result;
-  }).catch((error) => {
-    return error;
-  })
+  connection
+    .collection("client")
+    .updateOne({ email: emailUser }, { $push: { voitures: voiture } })
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => {
+      return error;
+    });
 }
 
 async function deposerVoiture(voiture, client) {
-
   const reparation = {
     date_depot: new Date(),
     date_sortie: null,
-    paiement: {
-
-    },
+    paiement: {},
     client: {
       id: client.id,
       nom: client.nom,
       prenom: client.prenom,
-      email: client.email
+      email: client.email,
     },
     voiture: voiture,
-    reparateur: {
-
-    },
+    reparateur: {},
     reparation_faire: [],
-    status: "Deposer"
-  }
+    status: "Deposer",
+  };
 
   const connection = getDatabase();
 
-  connection.collection("reparation").insertOne(reparation).then((result) => {
-    return result;
-  }).catch((error) => {
-    return error;
-  })
+  connection
+    .collection("reparation")
+    .insertOne(reparation)
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => {
+      return error;
+    });
 }
 
 async function getreparationsuser(email) {
   const connection = getDatabase();
-  return connection.collection("reparation").find({ "client.email": email }).toArray();
+  return connection
+    .collection("reparation")
+    .find({ "client.email": email })
+    .toArray();
+}
+
+async function paiementReparation(paiement, reparation_id) {
+  const connection = getDatabase();
+
+  connection
+    .collection("reparation")
+    .updateOne({ _id: reparation_id }, { $set: { paiement: paiement } })
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => {
+      return error;
+    });
 }
 
 module.exports = {
@@ -86,5 +106,6 @@ module.exports = {
   GetUser: getUser,
   AddUserVoiture: addVoitureToUser,
   DeposerVoiture: deposerVoiture,
-  AllUserReparations: getreparationsuser
+  AllUserReparations: getreparationsuser,
+  PaiementReparation: paiementReparation
 };

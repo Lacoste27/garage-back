@@ -1,9 +1,10 @@
 const { error } = require("console");
+
+const { GetSalt, GetHash, VerifyPassword, GenerateAccessToken } = require("../utils/utils");
 const { ObjectId } = require("mongodb");
 var { Signup, GetUser, AddUserVoiture, DeposerVoiture, AllUserReparations,PaiementReparation } = require("../repository/user-repository");
-const { HttpStatusCodes } = require("../utils/statuscode");
-const { GetSalt, GetHash, VerifyPassword } = require("../utils/utils");
 const { validateemail, validateuserdata, validatevoituredata } = require("../utils/validation");
+const { HttpStatusCodes } = require("../utils/statuscode");
 
 
 function paiement(request, response){  
@@ -45,6 +46,7 @@ function signup(request, response) {
     user.prenom,
     user.password
   );
+  
   const _user = GetUser(user.email).then((result) => {
     if (result != null) {
       return response
@@ -62,12 +64,13 @@ function signup(request, response) {
 
         insert
           .then(() => {
+            const token = GenerateAccessToken(user);
             return response
               .status(HttpStatusCodes.ACCEPTED)
-              .json({ data: {}, message: "Nouveau client ajouter !",success: false,error:true });
+              .json({ data: {token}, message: "Nouveau client ajouter !",success: true,error:false });
           })
           .catch((error) => {
-            return response.status(HttpStatusCodes.NOT_ACCEPTABLE).json(error);
+            return response.status(HttpStatusCodes.NOT_ACCEPTABLE).json({data:{},message: error,success: false,error:true});
           });
       } else {
         return response
@@ -87,9 +90,17 @@ function login(request, response) {
     .then((result) => {
       const user = result;
       if (VerifyPassword(user, password)) {
+        console.log("Generation du token");
+        const token = GenerateAccessToken(user);
+        console.log("Token generer");
         return response
           .status(HttpStatusCodes.ACCEPTED)
-          .json({ data: {}, message: "Vous êtes authentifié",success: true,error:false });
+          .json({
+            data: {
+              token: token
+            }, message: "Vous êtes authentifié",
+            success: true,error:false 
+          });
       } else {
         return response
           .status(HttpStatusCodes.UNAUTHORIZED)
@@ -97,13 +108,13 @@ function login(request, response) {
       }
     })
     .catch((error) => {
-      return response.status(HttpStatusCodes.EXPECTATION_FAILED).json("error");
+      return response.status(HttpStatusCodes.EXPECTATION_FAILED).json(error);
     });
 }
 
 function getVoituresUser(request, response) {
   // const email = request.email;
-  const email = "tsiory@email.com";
+  const email = request.user.email;
 
   // if user is authenticated
   if (email != null) {
@@ -126,7 +137,8 @@ function getVoituresUser(request, response) {
 };
 
 function addVoitureUser(request, response) {
-  const email = "yroist@email.com";
+  // const email = "yroist@email.com";
+  const email = request.user.email;
 
   const voiture = {
     numero: request.body.numero,
@@ -159,7 +171,8 @@ function addVoitureUser(request, response) {
 }
 
 function deposerVoitureUser(request, response) {
-  const email = "yroist@email.com";
+  // const email = "yroist@email.com";
+  const email = request.user.email;
 
   const numeroVoiture = request.params.voiture;
 
@@ -198,7 +211,8 @@ function deposerVoitureUser(request, response) {
 }
 
 function getAllReparation(request, response) {
-  const email = "yroist@email.com";
+  // const email = "yroist@email.com";
+  const email = request.user.email;
 
   const reparations = AllUserReparations(email);
   reparations.then((result) => {

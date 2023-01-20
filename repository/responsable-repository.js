@@ -1,3 +1,10 @@
+
+
+async function getResponsable(email) {
+    const connection = getDatabase();
+    return connection.collection("responsable").findOne({ email: email });
+}
+
 const { ObjectId } = require("mongodb");
 const { getDatabase } = require("../models/connect");
 const { REPARATIONETAT } = require("../utils/utils");
@@ -73,4 +80,6 @@ module.exports = {
   getResponsable: getResponsable,
   receptionVoiture: receptionVoiture,
   validationPaiement: validerPaiement,
+      getResponsable: getResponsable
 };
+

@@ -2,6 +2,8 @@
  * Get a hash from the password.
  */
 var crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+var { SECRET_TOKEN } = require("../utils/parametre");
 
 function GetSalt() {
     return crypto.randomBytes(16).toString('hex');
@@ -17,6 +19,21 @@ function VerifyPassword(user, password) {
         user.salt, 1000, 64, `sha512`).toString(`hex`);
     return user_hash == user.password;
 }
+
+
+function generateAccessToken(user) {
+    const payload = {
+      nom: user.nom,
+      prenom: user.prenom,
+      email: user.email,
+      role: user.role
+    };
+
+    console.log(jwt.sign(payload, SECRET_TOKEN, { expiresIn: '1800s' }));
+  
+    return jwt.sign(payload, SECRET_TOKEN, { expiresIn: '1800s' })
+  }
+
 
 const MODEPAIEMENT = {  
     Mvola: "Mvola",
@@ -37,12 +54,13 @@ const VOITUREREPARATIONETATS= {
     fini:"Finis"
 }
 
+
 module.exports = {
     GetHash: GetHash,
     GetSalt: GetSalt,
     VerifyPassword: VerifyPassword,
+    GenerateAccessToken: generateAccessToken,
     REPARATIONETAT: REPARATIONETATS,
     VOITUREREPARATIONETAT: VOITUREREPARATIONETATS,
     MODEPAIEMENT:MODEPAIEMENT
-
 }

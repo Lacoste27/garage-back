@@ -199,7 +199,14 @@ function getAllReparation(request, response) {
 }
 
 function generateAccessToken(user) {
-  return jwt.sign(user, SECRET_TOKEN, { expiresIn: '1800s' })
+  const payload = {
+    nom: user.nom,
+    prenom: user.prenom,
+    email: user.email,
+    role: user.role
+  };
+
+  return jwt.sign(payload, SECRET_TOKEN, { expiresIn: '1800s' })
 }
 
 

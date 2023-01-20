@@ -2,6 +2,9 @@ const { error } = require("console");
 var { Signup, GetUser, AddUserVoiture, DeposerVoiture, AllUserReparations } = require("../repository/user-repository");
 const { GetSalt, GetHash, VerifyPassword } = require("../utils/utils");
 const { validateemail, validateuserdata, validatevoituredata } = require("../utils/validation");
+const { HttpStatusCodes } = require("../utils/statuscode");
+var { SECRET_TOKEN } = require("../utils/parametre");
+const jwt = require('jsonwebtoken');
 
 function signup(request, response) {
   const user = {
@@ -60,9 +63,16 @@ function login(request, response) {
     .then((result) => {
       const user = result;
       if (VerifyPassword(user, password)) {
+        console.log("Generation du token");
+        const token = generateAccessToken(user);
+        console.log("Token generer");
         return response
           .status(HttpStatusCodes.ACCEPTED)
-          .json({ data: {}, message: "Vous êtes authentifié" });
+          .json({
+            data: {
+              token: token
+            }, message: "Vous êtes authentifié"
+          });
       } else {
         return response
           .status(HttpStatusCodes.UNAUTHORIZED)
@@ -70,13 +80,13 @@ function login(request, response) {
       }
     })
     .catch((error) => {
-      return response.status(HttpStatusCodes.EXPECTATION_FAILED).json("error");
+      return response.status(HttpStatusCodes.EXPECTATION_FAILED).json(error);
     });
 }
 
 function getVoituresUser(request, response) {
   // const email = request.email;
-  const email = "tsiory@email.com";
+  const email = request.user.email;
 
   // if user is authenticated
   if (email != null) {
@@ -99,7 +109,8 @@ function getVoituresUser(request, response) {
 };
 
 function addVoitureUser(request, response) {
-  const email = "yroist@email.com";
+  // const email = "yroist@email.com";
+  const email = request.user.email;
 
   const voiture = {
     numero: request.body.numero,
@@ -132,7 +143,8 @@ function addVoitureUser(request, response) {
 }
 
 function deposerVoitureUser(request, response) {
-  const email = "yroist@email.com";
+  // const email = "yroist@email.com";
+  const email = request.user.email;
 
   const numeroVoiture = request.params.voiture;
 
@@ -171,7 +183,8 @@ function deposerVoitureUser(request, response) {
 }
 
 function getAllReparation(request, response) {
-  const email = "yroist@email.com";
+  // const email = "yroist@email.com";
+  const email = request.user.email;
 
   const reparations = AllUserReparations(email);
   reparations.then((result) => {
@@ -183,6 +196,10 @@ function getAllReparation(request, response) {
     console.log(error);
     return response.status(HttpStatusCodes.EXPECTATION_FAILED).json("Reparations non trouvée");
   })
+}
+
+function generateAccessToken(user) {
+  return jwt.sign(user, SECRET_TOKEN, { expiresIn: '1800s' })
 }
 
 

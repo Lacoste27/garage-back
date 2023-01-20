@@ -9,7 +9,7 @@ function authenticateToken(req, res, next) {
     if (token == null) return res.status(HttpStatusCodes.UNAUTHORIZED).json({ data: {}, message: "Veuillez d'abord vous identifier" });
 
     jwt.verify(token, SECRET_TOKEN, (error, user) => {
-        console.log(error);
+        console.log(user);
 
         if (error) return res.status(HttpStatusCodes.EXPECTATION_FAILED).json(error);
 

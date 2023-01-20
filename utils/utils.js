@@ -18,8 +18,23 @@ function VerifyPassword(user, password) {
     return user_hash == user.password;
 }
 
+
+function generateAccessToken(user) {
+    const payload = {
+      nom: user.nom,
+      prenom: user.prenom,
+      email: user.email,
+      role: user.role
+    };
+
+    console.log(payload);
+  
+    return jwt.sign(payload, SECRET_TOKEN, { expiresIn: '1800s' })
+  }
+
 module.exports = {
     GetHash: GetHash,
     GetSalt: GetSalt,
-    VerifyPassword: VerifyPassword
+    VerifyPassword: VerifyPassword,
+    GenerateAccessToken: generateAccessToken
 }

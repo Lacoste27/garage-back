@@ -1,6 +1,6 @@
 const { error } = require("console");
 var { Signup, GetUser, AddUserVoiture, DeposerVoiture, AllUserReparations } = require("../repository/user-repository");
-const { GetSalt, GetHash, VerifyPassword } = require("../utils/utils");
+const { GetSalt, GetHash, VerifyPassword, GenerateAccessToken } = require("../utils/utils");
 const { validateemail, validateuserdata, validatevoituredata } = require("../utils/validation");
 const { HttpStatusCodes } = require("../utils/statuscode");
 var { SECRET_TOKEN } = require("../utils/parametre");
@@ -21,6 +21,7 @@ function signup(request, response) {
     user.prenom,
     user.password
   );
+  
   const _user = GetUser(user.email).then((result) => {
     if (result != null) {
       return response
@@ -64,7 +65,7 @@ function login(request, response) {
       const user = result;
       if (VerifyPassword(user, password)) {
         console.log("Generation du token");
-        const token = generateAccessToken(user);
+        const token = GenerateAccessToken(user);
         console.log("Token generer");
         return response
           .status(HttpStatusCodes.ACCEPTED)
@@ -196,17 +197,6 @@ function getAllReparation(request, response) {
     console.log(error);
     return response.status(HttpStatusCodes.EXPECTATION_FAILED).json("Reparations non trouvée");
   })
-}
-
-function generateAccessToken(user) {
-  const payload = {
-    nom: user.nom,
-    prenom: user.prenom,
-    email: user.email,
-    role: user.role
-  };
-
-  return jwt.sign(payload, SECRET_TOKEN, { expiresIn: '1800s' })
 }
 
 

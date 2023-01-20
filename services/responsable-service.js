@@ -1,6 +1,6 @@
 const { error } = require("console");
 var { getResponsable } = require("../repository/responsable-repository");
-const { GetSalt, GetHash, VerifyPassword } = require("../utils/utils");
+const { GetSalt, GetHash, VerifyPassword, GenerateAccessToken } = require("../utils/utils");
 const { validateemail, validateuserdata, validatevoituredata } = require("../utils/validation");
 const { HttpStatusCodes } = require("../utils/statuscode");
 var { SECRET_TOKEN } = require("../utils/parametre");
@@ -15,7 +15,7 @@ function login(request, response) {
         .then((result) => {
             const user = result;
             if (VerifyPassword(user, password)) {
-                const token = generateAccessToken(user);
+                const token = GenerateAccessToken(user);
                 return response
                     .status(HttpStatusCodes.ACCEPTED)
                     .json({

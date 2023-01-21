@@ -19,12 +19,12 @@ function detailReparation(request, response) {
       if (rep != null) {
         return response
           .status(HttpStatusCodes.ACCEPTED)
-          .json({ data: rep ,message:"",success: true, error:false});
+          .json({ data: { reparation: rep }, message: "", success: true, error: false });
       }
     })
     .catch((error) => {
       console.log(error);
-      return response.status(HttpStatusCodes.EXPECTATION_FAILED).json({data:{},message:error,success: false,error:true});
+      return response.status(HttpStatusCodes.EXPECTATION_FAILED).json({ data: {}, message: error, success: false, error: true });
     });
 }
 
@@ -46,12 +46,12 @@ function addReparationVoiture(request, response) {
     .then(() => {
       response
         .status(HttpStatusCodes.CREATED)
-        .json({ data: {},  message: "Réparations voiture ajoutés" ,success: true,error:false});
+        .json({ data: {}, message: "Réparations voiture ajoutés", success: true, error: false });
     })
     .catch((error) => {
       response
         .status(HttpStatusCodes.CONFLICT)
-        .json({ data: {}, message: error ,success: false,error:true });
+        .json({ data: {}, message: error, success: false, error: true });
     });
 }
 
@@ -71,12 +71,12 @@ function changeVoitureReparationState(request, response) {
     .then(() => {
       response
         .status(HttpStatusCodes.CREATED)
-        .json({ data: {}, message: "Etat changé !" ,success: true,error:false });
+        .json({ data: {}, message: "Etat changé !", success: true, error: false });
     })
     .catch((error) => {
       response
         .status(HttpStatusCodes.CONFLICT)
-        .json({ data: {}, message: error ,success: false,error:true });
+        .json({ data: {}, message: error, success: false, error: true });
     });
 }
 

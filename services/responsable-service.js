@@ -40,18 +40,24 @@ function login(request, response) {
           },
           message: "Vous êtes authentifié en tant que responsable",
           success: true,
-          error:false
+          error: false,
         });
       } else {
-        return response
-          .status(HttpStatusCodes.UNAUTHORIZED)
-          .json({ data: {}, message: "Votre mot de passe est incorrect", success: false, error: true });
+        return response.status(HttpStatusCodes.UNAUTHORIZED).json({
+          data: {},
+          message: "Votre mot de passe est incorrect",
+          success: false,
+          error: true,
+        });
       }
     })
     .catch((error) => {
-      return response
-          .status(HttpStatusCodes.UNAUTHORIZED)
-          .json({ data: {}, message: "Votre mot de passe est incorrect ou votre email", success: false, error: true });
+      return response.status(HttpStatusCodes.UNAUTHORIZED).json({
+        data: {},
+        message: "Votre mot de passe est incorrect ou votre email",
+        success: false,
+        error: true,
+      });
     });
 }
 
@@ -75,26 +81,22 @@ function newResponsable(request, response) {
 
   getResponsable(responsable.email).then((result) => {
     if (result != null) {
-      return response
-        .status(HttpStatusCodes.CONFLICT)
-        .json({
-          data: {},
-          message: "L'email saisi est déjà utilisé!",
-          success: false,
-          error: true,
-        });
+      return response.status(HttpStatusCodes.CONFLICT).json({
+        data: {},
+        message: "L'email saisi est déjà utilisé!",
+        success: false,
+        error: true,
+      });
     } else {
       const add = addResponsable(responsable);
       add
         .then(() => {
-          return response
-            .status(HttpStatusCodes.ACCEPTED)
-            .json({
-              data: {},
-              message: "Nouveau responsable ajouter !",
-              success: true,
-              error: false,
-            });
+          return response.status(HttpStatusCodes.ACCEPTED).json({
+            data: {},
+            message: "Nouveau responsable ajouter !",
+            success: true,
+            error: false,
+          });
         })
         .catch((error) => {
           return response
@@ -107,32 +109,34 @@ function newResponsable(request, response) {
 
 function ReceptionVoiture(request, response) {
   const body = request.body;
-  const reparateur = {
-    id: ObjectId(body.data.reparateur.id),
-    nom: body.data.reparateur.nom,
-    prenom: body.data.reparateur.prenom,
-    email: body.data.reparateur.email,
-  };
 
-  const reparation_id = body.data.reparation_id;
+  const responsable = getResponsable(body.data.reparateur.email);
 
-  const reception = receptionVoiture(reparation_id, reparateur);
-  reception
-    .then(() => {
-      response
-        .status(HttpStatusCodes.ACCEPTED)
-        .json({
+  responsable.then((result) => {
+    const reparation_id = body.data.reparation_id;
+
+    const reparateur = {
+      id: ObjectId(result._id),
+      nom: result.nom,
+      prenom: result.prenom,
+      email: result.email,
+    };
+    const reception = receptionVoiture(reparation_id, reparateur);
+    reception
+      .then(() => {
+        response.status(HttpStatusCodes.ACCEPTED).json({
           data: {},
           message: "Voiture recues",
           success: true,
           error: false,
         });
-    })
-    .catch((error) => {
-      response
-        .status(HttpStatusCodes.CONFLICT)
-        .json({ data: {}, message: error, success: false, error: true });
-    });
+      })
+      .catch((error) => {
+        response
+          .status(HttpStatusCodes.CONFLICT)
+          .json({ data: {}, message: error, success: false, error: true });
+      });
+  });
 }
 
 function ValiderPaiement(request, response) {
@@ -145,14 +149,12 @@ function ValiderPaiement(request, response) {
 
   valider
     .then(() => {
-      response
-        .status(HttpStatusCodes.ACCEPTED)
-        .json({
-          data: {},
-          message: "Paiement validé !",
-          success: true,
-          error: false,
-        });
+      response.status(HttpStatusCodes.ACCEPTED).json({
+        data: {},
+        message: "Paiement validé !",
+        success: true,
+        error: false,
+      });
     })
     .catch((error) => {
       response

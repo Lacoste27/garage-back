@@ -2,32 +2,32 @@ const { error } = require("console");
 
 const { GetSalt, GetHash, VerifyPassword, GenerateAccessToken } = require("../utils/utils");
 const { ObjectId } = require("mongodb");
-var { Signup, GetUser, AddUserVoiture, DeposerVoiture, AllUserReparations,PaiementReparation } = require("../repository/user-repository");
+var { Signup, GetUser, AddUserVoiture, DeposerVoiture, AllUserReparations, PaiementReparation } = require("../repository/user-repository");
 const { validateemail, validateuserdata, validatevoituredata } = require("../utils/validation");
 const { HttpStatusCodes } = require("../utils/statuscode");
 
 
-function paiement(request, response){  
+function paiement(request, response) {
   const body = request.body;
 
-  const paiement = {  
-    _id:new ObjectId(),
+  const paiement = {
+    _id: new ObjectId(),
     date: new Date(),
-    mode:body.data.paiement.mode,
-    recu:body.data.paiement.recu,
-    rendu:0,  
+    mode: body.data.paiement.mode,
+    recu: body.data.paiement.recu,
+    rendu: 0,
     valid: 0,
-    valideur:{}
+    valideur: {}
   }
 
   const reparation_id = ObjectId(body.data.reparation_id);
 
   const paiements = PaiementReparation(paiement, reparation_id);
 
-  paiements.then(() => {  
-    response.status(HttpStatusCodes.ACCEPTED).json({data:{},message:"Reparations payé", success: true, error: false})
-  }).catch((erreur) => {  
-    response.status(HttpStatusCodes.BAD_REQUEST).json({data:{},message:erreur, success: false, error: true})
+  paiements.then(() => {
+    response.status(HttpStatusCodes.ACCEPTED).json({ data: {}, message: "Reparations payé", success: true, error: false })
+  }).catch((erreur) => {
+    response.status(HttpStatusCodes.BAD_REQUEST).json({ data: {}, message: erreur, success: false, error: true })
   })
 }
 
@@ -46,12 +46,12 @@ function signup(request, response) {
     user.prenom,
     user.password
   );
-  
+
   const _user = GetUser(user.email).then((result) => {
     if (result != null) {
       return response
         .status(HttpStatusCodes.CONFLICT)
-        .json({ data: {}, message: "L'email saisi est déjà utilisé!" ,success: false,error:true});
+        .json({ data: {}, message: "L'email saisi est déjà utilisé!", success: false, error: true });
     } else {
       if (message.result) {
         const password = user.password;
@@ -67,15 +67,15 @@ function signup(request, response) {
             const token = GenerateAccessToken(user);
             return response
               .status(HttpStatusCodes.ACCEPTED)
-              .json({ data: {token}, message: "Nouveau client ajouter !",success: true,error:false });
+              .json({ data: { token }, message: "Nouveau client ajouter !", success: true, error: false });
           })
           .catch((error) => {
-            return response.status(HttpStatusCodes.NOT_ACCEPTABLE).json({data:{},message: error,success: false,error:true});
+            return response.status(HttpStatusCodes.NOT_ACCEPTABLE).json({ data: {}, message: error, success: false, error: true });
           });
       } else {
         return response
           .status(HttpStatusCodes.BAD_REQUEST)
-          .json({ data: {}, message:"",success: false,error:true });
+          .json({ data: {}, message: "", success: false, error: true });
       }
     }
   });
@@ -99,12 +99,12 @@ function login(request, response) {
             data: {
               token: token
             }, message: "Vous êtes authentifié",
-            success: true,error:false 
+            success: true, error: false
           });
       } else {
         return response
           .status(HttpStatusCodes.UNAUTHORIZED)
-          .json({ data: {}, message: "Votre mot de passe est incorrect",success: false,error:true });
+          .json({ data: {}, message: "Votre mot de passe est incorrect", success: false, error: true });
       }
     })
     .catch((error) => {
@@ -122,9 +122,9 @@ function getVoituresUser(request, response) {
     user.then((result) => {
       const utilisateur = result;
       if (utilisateur != null) {
-        return response.status(HttpStatusCodes.ACCEPTED).json({ data: utilisateur.voitures,message:"",success: true,error:false })
+        return response.status(HttpStatusCodes.ACCEPTED).json({ data: utilisateur.voitures, message: "", success: true, error: false })
       } else {
-        return response.status(HttpStatusCodes.EXPECTATION_FAILED).json({ data: utilisateur.voitures,message:"Utilisateur non trouvé",success: false,error:true });
+        return response.status(HttpStatusCodes.EXPECTATION_FAILED).json({ data: utilisateur.voitures, message: "Utilisateur non trouvé", success: false, error: true });
       }
 
     }).catch((error) => {
@@ -156,7 +156,7 @@ function addVoitureUser(request, response) {
       insert.then((result) => {
         return response
           .status(HttpStatusCodes.ACCEPTED)
-          .json({ data: {}, message: "Nouvel voiture ajouté" , success: true, error:false});
+          .json({ data: {}, message: "Nouvel voiture ajouté", success: true, error: false });
       }).catch((error) => {
         return response.status(HttpStatusCodes.NOT_ACCEPTABLE).json(error);
       });
@@ -193,7 +193,7 @@ function deposerVoitureUser(request, response) {
       deposerVoiture.then((value) => {
         return response
           .status(HttpStatusCodes.ACCEPTED)
-          .json({ data: {}, message: "Nouveau reparation ajouté" });
+          .json({ data: {}, message: "Nouveau reparation ajouté", success: true, error: false });
       }).catch((error) => {
         console.log(error)
         return response.status(HttpStatusCodes.NOT_ACCEPTABLE).json(error);
@@ -218,7 +218,7 @@ function getAllReparation(request, response) {
   reparations.then((result) => {
     const reps = result;
     if (reps != null) {
-      return response.status(HttpStatusCodes.ACCEPTED).json({ reparations: reps });
+      return response.status(HttpStatusCodes.ACCEPTED).json({ data: { reparations: reps }, success: true, error: false });
     }
   }).catch((error) => {
     console.log(error);

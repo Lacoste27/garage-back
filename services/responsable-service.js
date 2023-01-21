@@ -32,9 +32,6 @@ function login(request, response) {
   user
     .then((result) => {
       const user = result;
-      console.log('---------')
-      console.log(user)
-      console.log('---------')
       if (VerifyPassword(user, password)) {
         const token = GenerateAccessToken(user);
         return response.status(HttpStatusCodes.ACCEPTED).json({
@@ -42,16 +39,19 @@ function login(request, response) {
             token: token,
           },
           message: "Vous êtes authentifié en tant que responsable",
+          success: true,
+          error:false
         });
       } else {
         return response
           .status(HttpStatusCodes.UNAUTHORIZED)
-          .json({ data: {}, message: "Votre mot de passe est incorrect" });
+          .json({ data: {}, message: "Votre mot de passe est incorrect", success: false, error: true });
       }
     })
     .catch((error) => {
-      console.log(error);
-      return response.status(HttpStatusCodes.EXPECTATION_FAILED).json(error);
+      return response
+          .status(HttpStatusCodes.UNAUTHORIZED)
+          .json({ data: {}, message: "Votre mot de passe est incorrect ou votre email", success: false, error: true });
     });
 }
 

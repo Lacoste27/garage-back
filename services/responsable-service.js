@@ -32,6 +32,9 @@ function login(request, response) {
   user
     .then((result) => {
       const user = result;
+      console.log('---------')
+      console.log(user)
+      console.log('---------')
       if (VerifyPassword(user, password)) {
         const token = GenerateAccessToken(user);
         return response.status(HttpStatusCodes.ACCEPTED).json({

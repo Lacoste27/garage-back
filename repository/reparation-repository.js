@@ -13,6 +13,11 @@ async function getAllReparation() {
   return connection.collection("reparation").find({}).toArray();
 }
 
+async function getListeReparation(etat){  
+  const connection = getDatabase();
+  return connection.collection("reparation").find({status:etat}).toArray();
+}
+
 async function addVoitureReparation(reparation_id, reparations) {
   const connection = getDatabase();
   connection
@@ -55,6 +60,7 @@ async function changeVoitureReparationEtat(
 
 module.exports = {
   GetAllReparation: getAllReparation,
+  GetListeReparation: getListeReparation,
   DetailReparation: getDetailReparation,
   AddVoitureReparation: addVoitureReparation,
   ChangeVoitureReparationEtat: changeVoitureReparationEtat,

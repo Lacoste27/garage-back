@@ -4,7 +4,7 @@ var {
   AddVoitureReparation,
   ChangeVoitureReparationEtat,
   GetAllReparation,
-  GetReparationVoiture
+  GetReparationVoiture,
   GetListeReparation
 } = require("../repository/reparation-repository");
 const { HttpStatusCodes } = require("../utils/statuscode");
@@ -133,6 +133,6 @@ module.exports = {
   addReparationVoiture: addReparationVoiture,
   changeVoitureReparationEtat: changeVoitureReparationState,
   getAllReparations: GetAllReparations,
-  getHistoriqueVoiture: getHistoriqueVoiture
+  getHistoriqueVoiture: getHistoriqueVoiture,
   getListeReparation: GetListeReparations
 };

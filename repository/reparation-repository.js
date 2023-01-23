@@ -58,10 +58,17 @@ async function changeVoitureReparationEtat(
     });
 }
 
+async function getReparationVoiture(numero) {
+  const connection = getDatabase();
+  console.log(numero);
+  return connection.collection("reparation").find({ "voiture.numero": numero }).toArray();
+}
+
 module.exports = {
   GetAllReparation: getAllReparation,
   GetListeReparation: getListeReparation,
   DetailReparation: getDetailReparation,
   AddVoitureReparation: addVoitureReparation,
   ChangeVoitureReparationEtat: changeVoitureReparationEtat,
+  GetReparationVoiture: getReparationVoiture
 };

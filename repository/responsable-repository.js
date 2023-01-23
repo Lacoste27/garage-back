@@ -80,6 +80,5 @@ module.exports = {
   getResponsable: getResponsable,
   receptionVoiture: receptionVoiture,
   validationPaiement: validerPaiement,
-      getResponsable: getResponsable
 };
 

@@ -38,6 +38,7 @@ function signup(request, response) {
     email: request.body.email,
     password: request.body.password,
     salt: "",
+    role: "client"
   };
 
   const message = validateuserdata(

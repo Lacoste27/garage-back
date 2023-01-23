@@ -5,6 +5,7 @@ var {
   ChangeVoitureReparationEtat,
   GetAllReparation,
   GetReparationVoiture
+  GetListeReparation
 } = require("../repository/reparation-repository");
 const { HttpStatusCodes } = require("../utils/statuscode");
 const { REPARATIONETAT, VOITUREREPARATIONETAT } = require("../utils/utils");
@@ -86,7 +87,7 @@ function GetAllReparations(request, response) {
 
   allReparations
     .then((reparartions) => {
-      response.status(HttpStatusCodes.ACCEPTED).json({ data: { reparartions } });
+      response.status(HttpStatusCodes.ACCEPTED).json({ data: { reparartions } , success: true ,error: false});
     })
     .catch((error) => {
       response
@@ -106,6 +107,24 @@ function getHistoriqueVoiture(request, response) {
       response
         .status(HttpStatusCodes.BAD_REQUEST)
         .json({ data: {}, message: error, success: false, error: true });
+        });
+       }
+  
+
+function GetListeReparations(request, response) {
+  const etat = request.query.etat
+  console.log(etat);
+
+  const allReparations = GetListeReparation(etat);
+
+  allReparations
+    .then((reparartions) => {
+      response.status(HttpStatusCodes.ACCEPTED).json({ data: { reparartions }, message:'', success: true ,error: false });
+    })
+    .catch((error) => {
+      response
+        .status(HttpStatusCodes.BAD_REQUEST)
+        .json({ data: {}, message: error, success: false ,error: true });
     });
 }
 
@@ -115,4 +134,5 @@ module.exports = {
   changeVoitureReparationEtat: changeVoitureReparationState,
   getAllReparations: GetAllReparations,
   getHistoriqueVoiture: getHistoriqueVoiture
+  getListeReparation: GetListeReparations
 };

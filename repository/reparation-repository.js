@@ -13,9 +13,9 @@ async function getAllReparation() {
   return connection.collection("reparation").find({}).toArray();
 }
 
-async function getListeReparation(etat){  
+async function getListeReparation(etat) {
   const connection = getDatabase();
-  return connection.collection("reparation").find({status:etat}).toArray();
+  return connection.collection("reparation").find({ status: etat }).toArray();
 }
 
 async function addVoitureReparation(reparation_id, reparations) {
@@ -58,10 +58,28 @@ async function changeVoitureReparationEtat(
     });
 }
 
+async function changeReparationEtat(reparation_id, etat) {
+  const connection = getDatabase();
+
+  connection
+    .collection("reparation")
+    .updateOne({ _id: ObjectId(reparation_id) }, { $set: { status: etat } })
+    .then((result) => {
+       console.log(result);
+      return result;
+    })
+    .catch((error) => {
+      return error;
+    });
+}
+
 async function getReparationVoiture(numero) {
   const connection = getDatabase();
   console.log(numero);
-  return connection.collection("reparation").find({ "voiture.numero": numero }).toArray();
+  return connection
+    .collection("reparation")
+    .find({ "voiture.numero": numero })
+    .toArray();
 }
 
 module.exports = {
@@ -70,5 +88,6 @@ module.exports = {
   DetailReparation: getDetailReparation,
   AddVoitureReparation: addVoitureReparation,
   ChangeVoitureReparationEtat: changeVoitureReparationEtat,
-  GetReparationVoiture: getReparationVoiture
+  GetReparationVoiture: getReparationVoiture,
+  ChangeReparationEtat: changeReparationEtat
 };

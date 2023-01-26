@@ -82,6 +82,12 @@ async function getReparationVoiture(numero) {
     .toArray();
 }
 
+async function getPaiementAValider(){  
+  const connection = getDatabase();
+
+  return connection.collection("reparation").find({"paiement.valid":0})
+}
+
 module.exports = {
   GetAllReparation: getAllReparation,
   GetListeReparation: getListeReparation,
@@ -89,5 +95,6 @@ module.exports = {
   AddVoitureReparation: addVoitureReparation,
   ChangeVoitureReparationEtat: changeVoitureReparationEtat,
   GetReparationVoiture: getReparationVoiture,
-  ChangeReparationEtat: changeReparationEtat
+  ChangeReparationEtat: changeReparationEtat,
+  GetPaiementAvalider: getPaiementAValider,
 };

@@ -163,6 +163,7 @@ function ValiderPaiement(request, response) {
     });
 }
 
+
 module.exports = {
   login: login,
   newResponsable: newResponsable,

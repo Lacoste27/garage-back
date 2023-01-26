@@ -7,6 +7,7 @@ var {
   GetReparationVoiture,
   GetListeReparation,
   ChangeReparationEtat,
+  GetPaiementAvalider,
 } = require("../repository/reparation-repository");
 const { HttpStatusCodes } = require("../utils/statuscode");
 const {
@@ -194,6 +195,25 @@ function changeReparationEtat(request, response) {
     });
 }
 
+function getPaiementAValider(request, response){  
+    const paiement_a_valider = GetPaiementAvalider();
+    paiement_a_valider.then((response) =>{
+      response.status(HttpStatusCodes.ACCEPTED).json({
+        data: { reparations },
+        message: "Liste des paiements à valider",
+        success: true,
+        error: false,
+      });
+    }).catch((error) =>{
+      response.status(HttpStatusCodes.ACCEPTED).json({
+        data: { },
+        message: error,
+        success: false,
+        error: true,
+      });
+    })
+}
+
 const reparation = (module.exports = {
   reparationDetail: detailReparation,
   addReparationVoiture: addReparationVoiture,
@@ -202,4 +222,5 @@ const reparation = (module.exports = {
   getHistoriqueVoiture: getHistoriqueVoiture,
   getListeReparation: GetListeReparations,
   changeReparationEtat: changeReparationEtat,
+  getPaiementAValider: GetPaiementAvalider
 });

@@ -12,7 +12,8 @@ var reparationsRouter = require('./routes/reparations.routes');
 var responsableRouter = require('./routes/responsable.routes');
 
 const { MongoClient } = require('mongodb');
-const { Parametre } = require('./utils/parametre')
+const { Parametre } = require('./utils/parametre');
+const paiementRouter = require('./routes/paiement.routes');
 
 
 var app = express();
@@ -30,7 +31,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/reparations', reparationsRouter);
-app.use('/responsables',responsableRouter)
+app.use('/responsables',responsableRouter);
+app.use('/paiements',paiementRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

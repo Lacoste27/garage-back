@@ -1,4 +1,9 @@
-const { addDepense, all } = require("../repository/depense.repository");
+const {
+  addDepense,
+  all,
+  get,
+  getDepense,
+} = require("../repository/depense.repository");
 const { HttpStatusCodes } = require("../utils/statuscode");
 
 function AddDepense(request, response) {
@@ -16,7 +21,7 @@ function AddDepense(request, response) {
     })
     .catch((error) => {
       response.status(HttpStatusCodes.EXPECTATION_FAILED).json({
-        data: { },
+        data: {},
         message: error,
         success: false,
         error: true,
@@ -46,7 +51,32 @@ function All(request, response) {
     });
 }
 
+function GetDepense(request, response) {
+  const filter = request.body.filter;
+
+  const get = getDepense(filter);
+
+  get
+    .then((depenses) => {
+      response.status(HttpStatusCodes.ACCEPTED).json({
+        data: depenses,
+        message: "Liste des depenses !",
+        success: true,
+        error: false,
+      });
+    })
+    .catch((error) => {
+      response.status(HttpStatusCodes.EXPECTATION_FAILED).json({
+        data: {},
+        message: error,
+        success: false,
+        error: true,
+      });
+    });
+}
+
 module.exports = {
   addDepense: AddDepense,
   all: All,
+  getDepense: GetDepense
 };

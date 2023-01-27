@@ -14,6 +14,7 @@ var responsableRouter = require('./routes/responsable.routes');
 const { MongoClient } = require('mongodb');
 const { Parametre } = require('./utils/parametre');
 const paiementRouter = require('./routes/paiement.routes');
+const statistiqueRouter = require('./routes/statistique.routes');
 
 
 var app = express();
@@ -28,11 +29,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/statistiques', statistiqueRouter);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/reparations', reparationsRouter);
-app.use('/responsables',responsableRouter);
-app.use('/paiements',paiementRouter);
+app.use('/responsables', responsableRouter);
+app.use('/paiements', paiementRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

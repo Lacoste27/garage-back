@@ -14,6 +14,7 @@ var responsableRouter = require('./routes/responsable.routes');
 const { MongoClient } = require('mongodb');
 const { Parametre } = require('./utils/parametre');
 const paiementRouter = require('./routes/paiement.routes');
+const depenseRouter = require('./routes/depense.routes');
 
 
 var app = express();
@@ -33,6 +34,7 @@ app.use('/users', usersRouter);
 app.use('/reparations', reparationsRouter);
 app.use('/responsables',responsableRouter);
 app.use('/paiements',paiementRouter);
+app.use('/depenses',depenseRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

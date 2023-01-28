@@ -1,6 +1,6 @@
 const { ObjectId } = require("mongodb");
 const { HttpStatusCodes } = require("../utils/statuscode");
-const { temps, chiffrejour } = require("../repository/statistique-repository");
+const { temps, chiffrejour, chiffreMois } = require("../repository/statistique-repository");
 
 function tempsMoyen(request, response) {
     const temp = temps();
@@ -24,7 +24,33 @@ function tempsMoyen(request, response) {
 function chiffreParJour(request, response) {
     const chiffrebyDay = chiffrejour();
     chiffrebyDay.then((reponse) => {
-        console.log(reponse);
+        response.status(HttpStatusCodes.ACCEPTED).json({
+            data: {
+                chiffreJour: reponse
+            },
+            message: "",
+            success: true,
+            error: false,
+        });
+    }).catch((error) => {
+        console.log(error);
+        response
+            .status(HttpStatusCodes.EXPECTATION_FAILED)
+            .json({ data: {}, message: error, success: false, error: true });
+    });
+}
+
+function chiffreParMois(request, response) {
+    const chiffreByMonth = chiffreMois();
+    chiffreByMonth.then((reponse) => {
+        response.status(HttpStatusCodes.ACCEPTED).json({
+            data: {
+                chiffreMonth: reponse
+            },
+            message: "",
+            success: true,
+            error: false,
+        });
     }).catch((error) => {
         console.log(error);
         response
@@ -35,5 +61,6 @@ function chiffreParJour(request, response) {
 
 module.exports = {
     moyen: tempsMoyen,
-    chiffreParJour: chiffreParJour
+    chiffreParJour: chiffreParJour,
+    chiffreParMois: chiffreParMois
 }

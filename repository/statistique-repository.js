@@ -67,7 +67,36 @@ async function chiffreAffaireParJour(dateDebut = null, dateFin = null) {
     ]).toArray();
 }
 
+async function chiffreAffaireParMois() {
+    const connection = getDatabase();
+    return connection.collection("reparation").aggregate([
+        {
+            $match: {
+                "paiement.valid": {
+                    $exists: true,
+                    $eq: 1
+                }
+            }
+        }, {
+            $group: {
+                _id: {
+                    year: { $year: "$paiement.date" },
+                    month: { $month: "$paiement.date" }
+                },
+                total_cost_month: { $sum: "$paiement.recu" },
+                booking_month: {
+                    $push: {
+                        voiture: "$voiture",
+                        total: "$paiement.recu"
+                    }
+                }
+            }
+        }
+    ]).toArray();
+}
+
 module.exports = {
     temps: tempo,
-    chiffrejour: chiffreAffaireParJour
+    chiffrejour: chiffreAffaireParJour,
+    chiffreMois: chiffreAffaireParMois
 }

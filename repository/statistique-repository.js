@@ -46,6 +46,28 @@ async function tempo() {
     ).toArray();
 }
 
+async function chiffreAffaireParJour(dateDebut = null, dateFin = null) {
+    const connection = getDatabase();
+    return connection.collection("reparation").aggregate([
+        {
+            $match: {
+                "paiement.valid": {
+                    $exists: true,
+                    $eq: 1
+                }
+            }
+        },
+        {
+            $group: {
+                _id: "$paiement.date",
+                chiffre: { $sum: "$paiement.recu" },
+                count: { $sum: 1 }
+            }
+        }
+    ]).toArray();
+}
+
 module.exports = {
-    temps: tempo
+    temps: tempo,
+    chiffrejour: chiffreAffaireParJour
 }

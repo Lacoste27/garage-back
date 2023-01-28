@@ -84,10 +84,33 @@ async function chiffreAffaireParMois() {
                     month: { $month: "$paiement.date" }
                 },
                 total_cost_month: { $sum: "$paiement.recu" },
-                booking_month: {
+                detail_month: {
                     $push: {
                         voiture: "$voiture",
+                        date_paiement: "$paiement.date",
                         total: "$paiement.recu"
+                    }
+                }
+            }
+        }
+    ]).toArray();
+}
+
+async function depenseParMois() {
+    const connection = getDatabase();
+    return connection.collection("depense").aggregate([
+        {
+            $group: {
+                _id: {
+                    year: { $year: "$date" },
+                    month: { $month: "$date" }
+                },
+                total_cost_month: { $sum: "$montant" },
+                detail_month: {
+                    $push: {
+                        motif: "$motif",
+                        date_paiement: "$date",
+                        total: "$montant"
                     }
                 }
             }
@@ -98,5 +121,6 @@ async function chiffreAffaireParMois() {
 module.exports = {
     temps: tempo,
     chiffrejour: chiffreAffaireParJour,
-    chiffreMois: chiffreAffaireParMois
+    chiffreMois: chiffreAffaireParMois,
+    depenseMois: depenseParMois
 }

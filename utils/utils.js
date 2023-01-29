@@ -23,11 +23,10 @@ function VerifyPassword(user, password) {
 
 function SendMail(data, to) {
   let transporter = nodemailer.createTransport({
-    host: "smtp.mailtrap.io",
-    port: 2525,
+   service:"gmail",
     auth: {
-      user: "925341415c1492",
-      pass: "bed6bf611f00cd",
+      user: "robsonatsiory07@gmail.com",
+      pass: "zbemfwyeyycvqcaq",
     },
   });
   const message = {

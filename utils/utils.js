@@ -60,8 +60,6 @@ function generateAccessToken(user) {
     role: user.role,
   };
 
-  console.log(jwt.sign(payload, SECRET_TOKEN, { expiresIn: "1800s" }));
-
   return jwt.sign(payload, SECRET_TOKEN, { expiresIn: "1800s" });
 }
 
@@ -76,7 +74,8 @@ const MODEPAIEMENT = {
 const REPARATIONETATS = {
   deposer: "Deposer",
   encours: "En cours de réparation",
-  fini: "Sortie",
+  fini: "Finis",
+  sortie: "Sortie"
 };
 
 const VOITUREREPARATIONETATS = {

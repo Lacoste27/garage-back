@@ -22,6 +22,7 @@ const {
   addResponsable,
   receptionVoiture,
   validationPaiement,
+  validerBonSortie,
 } = require("../repository/responsable-repository");
 
 function login(request, response) {
@@ -163,10 +164,36 @@ function ValiderPaiement(request, response) {
     });
 }
 
+function ValiderBonSortie(request, response){  
+  const body = request.body;
+  
+  const valideur = body.data.valideur;
+  const reparation_id = body.data.reparation_id;
+
+  const valider = validerBonSortie(reparation_id , valideur);
+
+  valider.then(() => {
+    response.status(HttpStatusCodes.ACCEPTED).json({
+      data: {},
+      message: "Voiture sortie !",
+      success: true,
+      error: false,
+    });
+  }).catch(() => {
+    response.status(HttpStatusCodes.EXPECTATION_FAILED).json({
+      data: {},
+      message: error,
+      success: false,
+      error: true,
+    });
+  })
+}
+
 
 module.exports = {
   login: login,
   newResponsable: newResponsable,
   receptionVoiture: ReceptionVoiture,
   validationPaiement: ValiderPaiement,
+  ValiderBonSortie: ValiderBonSortie
 };

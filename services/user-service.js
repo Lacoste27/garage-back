@@ -6,6 +6,7 @@ const {
   VerifyPassword,
   GenerateAccessToken,
   TotalReparation,
+  REPARATIONETAT,
 } = require("../utils/utils");
 const { ObjectId } = require("mongodb");
 var {
@@ -15,6 +16,7 @@ var {
   DeposerVoiture,
   AllUserReparations,
   PaiementReparation,
+  RecuperationVoiture,
 } = require("../repository/user-repository");
 const {
   validateemail,
@@ -22,6 +24,8 @@ const {
   validatevoituredata,
 } = require("../utils/validation");
 const { HttpStatusCodes } = require("../utils/statuscode");
+
+const { reparationDetail } = require("../services/reparation-service");
 const { DetailReparation } = require("../repository/reparation-repository");
 
 function paiement(request, response) {
@@ -34,7 +38,7 @@ function paiement(request, response) {
     recu: body.data.paiement.recu,
     rendu: 0,
     valid: 0,
-    valideur: {}, 
+    valideur: {},
   };
 
   const reparation_id = ObjectId(body.data.reparation_id);
@@ -291,8 +295,8 @@ function deposerVoitureUser(request, response) {
           data: {},
           message:
             "La voiture n'appartient pas à l'utilisateur ou n'existe pas",
-          success:false,
-          error:true
+          success: false,
+          error: true,
         });
       }
     })
@@ -324,6 +328,64 @@ function getAllReparation(request, response) {
     });
 }
 
+function recuperationVoiture(request, response) {
+  const body = request.body;
+  const reparation_id = ObjectId(body.data.reparation_id);
+  console.log(body);
+
+  const details = DetailReparation(body.data.reparation_id);
+
+  details
+    .then((reparation_details) => {
+      if (reparation_details.paiement.valid == 0) {
+        response.status(HttpStatusCodes.ACCEPTED).json({
+          data: {},
+          message: "Votre paiement n'est pas encore validé ",
+          success: false,
+          error: true,
+        });
+      } else if (reparation_details.status != REPARATIONETAT.fini) {
+        response.status(HttpStatusCodes.ACCEPTED).json({
+          data: {},
+          message: "Votre voitre n'est pas encore finis",
+          success: false,
+          error: true,
+        });
+      } else if (
+        reparation_details.status === REPARATIONETAT.fini &&
+        reparation_details.paiement.valid == 1
+      ) {
+        const recuperation = RecuperationVoiture(reparation_id);
+
+        recuperation
+          .then(() => {
+            response.status(HttpStatusCodes.ACCEPTED).json({
+              data: {},
+              message: "Demande de récuperation ajouté",
+              success: true,
+              error: false,
+            });
+          })
+          .catch((error) => {
+            response.status(HttpStatusCodes.EXPECTATION_FAILED).json({
+              data: {},
+              message: error,
+              success: false,
+              error: true,
+            });
+          });
+      }
+    })
+    .catch((error) => {
+      response.status(HttpStatusCodes.ACCEPTED).json({
+        data: {},
+        message: error,
+        success: false,
+        error: false,
+      });
+    });
+}
+
 module.exports = {
   signup: signup,
   login: login,
@@ -332,4 +394,5 @@ module.exports = {
   deposerVoiture: deposerVoitureUser,
   alluserreparation: getAllReparation,
   paiementReparation: paiement,
+  recuperationVoiture: recuperationVoiture,
 };

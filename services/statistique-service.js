@@ -9,6 +9,7 @@ const {
   countAtelierReparation,
 } = require("../repository/statistique-repository");
 const { REPARATIONETAT } = require("../utils/utils");
+const query = require("node:querystring")
 
 function tempsMoyen(request, response) {
   const temp = temps();
@@ -98,14 +99,12 @@ function depenseParMois(request, response) {
 }
 
 function CountClientReparation(request, response) {
-  const body = request.body;
-
-  const client = body.data.client;
+  const client = request.query.email;
 
   const all = countClientReparation(client, "all");
   const encours = countClientReparation(client, REPARATIONETAT.encours);
   const finis = countClientReparation(client, REPARATIONETAT.fini);
-  const sortie = countAtelierReparation(client, REPARATIONETAT.sortie);
+  const sortie = countClientReparation(client, REPARATIONETAT.sortie);
 
   Promise.all([all, encours, finis, sortie])
     .then((values) => {
@@ -134,8 +133,7 @@ function CountClientReparation(request, response) {
 }
 
 function CountAtelierReparation(request, response) {
-  const body = request.body;
-  const atelier = body.data.atelier;
+  const atelier = request.query.email;
 
   const all = countAtelierReparation(atelier, "all");
   const encours = countAtelierReparation(atelier, REPARATIONETAT.encours);

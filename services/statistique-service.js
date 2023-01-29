@@ -23,7 +23,9 @@ function tempsMoyen(request, response) {
 }
 
 function chiffreParJour(request, response) {
-    const chiffrebyDay = chiffrejour();
+    const debut = request.query.debut;
+    const fin = request.query.fin;
+    const chiffrebyDay = chiffrejour(debut, fin);
     chiffrebyDay.then((reponse) => {
         console.log(reponse);
         response.status(HttpStatusCodes.ACCEPTED).json({

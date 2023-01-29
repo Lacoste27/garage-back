@@ -25,7 +25,7 @@ async function tempo() {
                             {
                                 startDate: { $toDate: "$date_depot" },
                                 endDate: { $toDate: "$date_sortie" },
-                                unit: "second"
+                                unit: "hour"
                             }
                         }
                     }
@@ -48,12 +48,26 @@ async function tempo() {
 
 async function chiffreAffaireParJour(dateDebut = null, dateFin = null) {
     const connection = getDatabase();
+    var debut = "2000-01-01T00:00:00.000Z";
+    var fin = "2060-01-01T00:00:00.000Z";
+
+    if (dateDebut != null && dateDebut != "" && dateDebut != undefined) {
+        debut = dateDebut + "T00:00:00.000Z";
+    }
+    if (dateFin != null && dateFin != "" && dateFin != undefined) {
+        fin = dateFin + "T00:00:00.000Z";
+    }
+
     return connection.collection("reparation").aggregate([
         {
             $match: {
                 "paiement.valid": {
                     $exists: true,
                     $eq: 1
+                },
+                "paiement.date": {
+                    $gte: new Date(debut),
+                    $lte: new Date(fin)
                 }
             }
         },

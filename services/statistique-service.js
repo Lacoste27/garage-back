@@ -5,6 +5,7 @@ const { temps, chiffrejour, chiffreMois, depenseMois } = require("../repository/
 function tempsMoyen(request, response) {
     const temp = temps();
     temp.then((reponse) => {
+        console.log(reponse);
         response.status(HttpStatusCodes.ACCEPTED).json({
             data: {
                 tempsmoyen: reponse
@@ -24,6 +25,7 @@ function tempsMoyen(request, response) {
 function chiffreParJour(request, response) {
     const chiffrebyDay = chiffrejour();
     chiffrebyDay.then((reponse) => {
+        console.log(reponse);
         response.status(HttpStatusCodes.ACCEPTED).json({
             data: {
                 chiffreJour: reponse

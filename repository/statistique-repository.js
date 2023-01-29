@@ -63,7 +63,9 @@ async function chiffreAffaireParJour(dateDebut = null, dateFin = null) {
                 chiffre: { $sum: "$paiement.recu" },
                 count: { $sum: 1 }
             }
-        }
+        }, {
+            $sort: { "_id": -1 }
+        },
     ]).toArray();
 }
 
@@ -92,7 +94,9 @@ async function chiffreAffaireParMois() {
                     }
                 }
             }
-        }
+        }, {
+            $sort: { "paiement.date": -1 }
+        },
     ]).toArray();
 }
 
@@ -114,6 +118,8 @@ async function depenseParMois() {
                     }
                 }
             }
+        }, {
+            $sort: { "month": -1, "year": -1 }
         }
     ]).toArray();
 }

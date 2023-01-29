@@ -9,7 +9,6 @@ const {
   countAtelierReparation,
 } = require("../repository/statistique-repository");
 const { REPARATIONETAT } = require("../utils/utils");
-const query = require("node:querystring")
 
 function tempsMoyen(request, response) {
   const temp = temps();

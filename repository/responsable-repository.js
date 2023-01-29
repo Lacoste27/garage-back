@@ -1,8 +1,6 @@
-
-
 async function getResponsable(email) {
-    const connection = getDatabase();
-    return connection.collection("responsable").findOne({ email: email });
+  const connection = getDatabase();
+  return connection.collection("responsable").findOne({ email: email });
 }
 
 const { ObjectId } = require("mongodb");
@@ -56,6 +54,23 @@ async function receptionVoiture(reparation_id, reparateur) {
     });
 }
 
+async function validerBonSortie(reparation_id, atelier) {
+  const connection = getDatabase();
+
+  const valideur = {
+    nom: atelier.nom,
+    prenom: atelier.prenom,
+    email: atelier.email,
+  };
+
+  connection
+    .collection("reparation")
+    .updateOne(
+      { _id: ObjectId(reparation_id) },
+      { $set: { "sortie.valideur": valideur, "sortie.valid": 1, "date_sortie":new Date() } }
+    );
+}
+
 // Responsable financier
 async function validerPaiement(valideur, paiement_id) {
   const connection = getDatabase();
@@ -64,7 +79,7 @@ async function validerPaiement(valideur, paiement_id) {
     .collection("reparation")
     .updateOne(
       { "paiement._id": ObjectId(paiement_id) },
-      { $set: { "paiement.valideur": valideur, "paiement.valid": 1 } }
+      { $set: { "paiement.valideur": valideur, "paiement.valid": 1, "date_sortie":new Date() } }
     )
     .then((result) => {
       console.log(result);
@@ -80,5 +95,5 @@ module.exports = {
   getResponsable: getResponsable,
   receptionVoiture: receptionVoiture,
   validationPaiement: validerPaiement,
+  validerBonSortie : validerBonSortie
 };
-

@@ -10,6 +10,7 @@ const {
   deposerVoiture,
   alluserreparation,
   paiementReparation,
+  recuperationVoiture,
 } = require("../services/user-service");
 const { authenticateToken } = require('../middleware/client-middleware');
 const { authenticateAtelierToken } = require('../middleware/atelier-middleware');
@@ -42,5 +43,7 @@ userRouter.get("/:voiture/depot", deposerVoiture);
 userRouter.get("/reparations", alluserreparation);
 // Payer une factures
 userRouter.post("/reparations/paiement", paiementReparation);
+//recupere voiture 
+userRouter.post("/recuperation", recuperationVoiture);
 
 module.exports = userRouter;

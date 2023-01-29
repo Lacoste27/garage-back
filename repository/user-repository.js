@@ -8,7 +8,7 @@ async function signup(newuser) {
     email: newuser.email,
     password: newuser.password,
     salt: newuser.salt,
-    role :'client',
+    role: "client",
     voitures: [],
   };
 
@@ -65,6 +65,7 @@ async function deposerVoiture(voiture, client) {
     reparateur: {},
     reparation_faire: [],
     status: "Deposer",
+    sortie: {},
   };
 
   const connection = getDatabase();
@@ -102,11 +103,27 @@ async function paiementReparation(paiement, reparation_id) {
     });
 }
 
+async function recuperationVoiture(reparation_id) {
+  const connection = getDatabase();
+
+  connection
+    .collection("reparation")
+    .updateOne(
+      { _id: reparation_id },
+      { $set: { sortie: { date_demande: new Date(), valideur: {}, valid: 0 } } }
+    ).then((result) => {
+      return result;
+    }).catch((error) => {  
+      return error;
+    }) 
+}
+
 module.exports = {
   Signup: signup,
   GetUser: getUser,
   AddUserVoiture: addVoitureToUser,
   DeposerVoiture: deposerVoiture,
   AllUserReparations: getreparationsuser,
-  PaiementReparation: paiementReparation
+  PaiementReparation: paiementReparation,
+  RecuperationVoiture: recuperationVoiture
 };

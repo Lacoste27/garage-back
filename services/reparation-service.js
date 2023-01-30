@@ -173,7 +173,7 @@ function changeReparationEtat(request, response) {
         total: Total,
       })
       .then((result) => {
-        SendMail(result, "robsonatsiory07@gmail.com");
+        SendMail(result, response.client.email);
       });
   });
 
@@ -222,7 +222,7 @@ function getVoitureASortir(request, response){
       data: _voitures,
       message: "Liste des voiture à sortir",
       success: true,
-      error: false,
+      error: false,qQ
     });
   }).catch((error) =>{
     response.status(HttpStatusCodes.EXPECTATION_FAILED).json({

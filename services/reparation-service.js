@@ -222,7 +222,7 @@ function getVoitureASortir(request, response){
       data: _voitures,
       message: "Liste des voiture à sortir",
       success: true,
-      error: false,qQ
+      error: false,
     });
   }).catch((error) =>{
     response.status(HttpStatusCodes.EXPECTATION_FAILED).json({

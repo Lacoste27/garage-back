@@ -1,5 +1,5 @@
 var Parametre = {
-    uri: "mongodb+srv://m1p10mean:nlaEWKKvWosqOMGp@cluster0.76omdmb.mongodb.net/garage",
+    uri: "mongodb+srv://meanm1:U8JrTmY2re238UaF@mean-cluster.jupcutc.mongodb.net/garage",
 }
 
 var SECRET_TOKEN = "SECRET_TOKEN";

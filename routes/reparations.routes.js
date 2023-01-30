@@ -10,6 +10,7 @@ const {
   getHistoriqueVoiture,
   changeReparationEtat,
   getPaiementAValider,
+  getVoitureASortir,
 } = require("../services/reparation-service");
 
 // receuperer tous les réparations
@@ -35,5 +36,8 @@ reparationRouter.get("/:idvoiture/historique", getHistoriqueVoiture);
 
 //Liste de paiement reparations à valider
 reparationRouter.get("/paiements/liste", getPaiementAValider);
+
+//Liste des voitures à sortir
+reparationRouter.get("/sortir/liste", getVoitureASortir);
 
 module.exports = reparationRouter;

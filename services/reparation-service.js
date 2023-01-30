@@ -8,6 +8,7 @@ var {
   GetListeReparation,
   ChangeReparationEtat,
   GetPaiementAvalider,
+  GetVoitureASortir,
 } = require("../repository/reparation-repository");
 const { HttpStatusCodes } = require("../utils/statuscode");
 const {
@@ -214,6 +215,25 @@ function getPaiementAValider(request, response){
     })
 }
 
+function getVoitureASortir(request, response){  
+  const voitures = GetVoitureASortir();
+  voitures.then((_voitures) =>{
+    response.status(HttpStatusCodes.ACCEPTED).json({
+      data: _voitures,
+      message: "Liste des voiture à sortir",
+      success: true,
+      error: false,
+    });
+  }).catch((error) =>{
+    response.status(HttpStatusCodes.EXPECTATION_FAILED).json({
+      data: { },
+      message: error,
+      success: false,
+      error: true,
+    });
+  })
+}
+
 const reparation = (module.exports = {
   reparationDetail: detailReparation,
   addReparationVoiture: addReparationVoiture,
@@ -222,5 +242,6 @@ const reparation = (module.exports = {
   getHistoriqueVoiture: getHistoriqueVoiture,
   getListeReparation: GetListeReparations,
   changeReparationEtat: changeReparationEtat,
-  getPaiementAValider: GetPaiementAvalider
+  getPaiementAValider: GetPaiementAvalider,
+  getVoitureASortir: getVoitureASortir
 });
